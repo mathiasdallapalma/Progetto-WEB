@@ -5,6 +5,25 @@ import bodyParser from 'body-parser';
 import { userRouter } from "./routes/user.js";
 
 import dotenv from "dotenv"
+
+/* Test Acqua
+import pg from 'pg'
+const { Client } = pg
+const client = new Client({
+  user: 'postgres',
+  password: 'password',
+  host: 'localhost',
+  port: 5432,
+  database: 'mydb',
+});
+
+//Test di connessione eheh
+await client.connect();
+const res = await client.query('SELECT NOW() as message');
+console.log(res.rows[0].message);
+await client.end();
+*/
+
 dotenv.config();
 
 const app = express();

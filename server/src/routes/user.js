@@ -1,8 +1,14 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import * as db from './../db/index.js';
 
 const router = express.Router();
+
+// tests Acqua
+const result = await db.query('SELECT NOW()')
+console.log(result.rows[0])
+// fine test Acqua
 
 
 router.post("/register", async (req, res) => { 
@@ -14,9 +20,7 @@ router.post("/login", async (req, res) => {
 
   console.log(username+" "+password)
 
-
   // TODO qua dovrebbe cercare nel db user e password
-
   
   const token = jwt.sign({ id: "0000" }, "secret");
   res.json({ token, userID: "0000" });
