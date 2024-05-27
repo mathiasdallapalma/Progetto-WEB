@@ -1,6 +1,13 @@
 # File da eseguire una volta in locale per generare le tabelle del database e inserire i vari dati
 # Mi sono aiutato con gemini per fare prima
 
+# python -m pip install psycopg2
+# sudo apt install postgresql
+# sudo su postgres
+# initdb --locale=C.UTF-8 --encoding=UTF8 -D /var/lib/postgres/data
+# createdb mydb
+# alter user postgres password 'password';
+
 import psycopg2
 
 # Inserisci le tue credenziali di connessione
