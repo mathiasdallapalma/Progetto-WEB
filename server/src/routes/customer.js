@@ -5,21 +5,13 @@ import * as db from './../db/index.js';
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  console.log("got api request")
+router.get("/customer/:idcust", async (req, res) => {
+  console.log("got api request:: /customer/:idcust")
+  const x = req.params.idcust;
   try {
-    const result = await db.query('SELECT * FROM orders;')
+    const result = await db.query('SELECT * FROM customer WHERE "CUST_CODE" = \'' + x + '\';')
     console.log(result)
-    // 2) lista ordini del cliente 
-    // SELECT * FROM orders WHERE orders.CUST_CODE = x;
-    // query per selezionare agente in base all'ordine, quando serve viene chiamata
-    // SELECT * FROM agents WHERE agents.AGENT_CODE = x;
-
-    // 3) lista ordini dell'agente + lista customers presenti nell'ordine
-    // SELECT * FROM orders WHERE orders.AGENT_CODE = x;
-    // ELECT * FROM orders WHERE orders.AGENT_CODE = x;
-
-    res.status(200).json(result.rows);
+    res.status(200).json(result.rows[0]);
   } catch (err) {
     res.status(500).json(err);
     console.error(err)
@@ -58,4 +50,4 @@ router.post("/", verifyToken, async (req, res) => {
 });
 
 
-export { router as ordersRouter };
+export { router as customerRouter };

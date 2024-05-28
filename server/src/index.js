@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 
 import { userRouter } from "./routes/user.js";
 import { ordersRouter } from "./routes/orders.js";
-
+import { customerRouter } from "./routes/customer.js";
 
 import dotenv from "dotenv"
 
@@ -39,7 +39,7 @@ app.use(bodyParser.urlencoded({
 
 app.use("/api/v1/auth", userRouter);
 app.use("/orders", ordersRouter);
-
+app.use("/customer/:idcust", customerRouter);
 
 
 async function startServer() {
