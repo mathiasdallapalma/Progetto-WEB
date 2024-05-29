@@ -5,8 +5,8 @@ import * as db from './../db/index.js';
 
 const router = express.Router();
 
-router.get("/customer/:idcust", async (req, res) => {
-  console.log("got api request:: /customer/:idcust")
+router.get("/:idcust", async (req, res) => {
+  console.log("API request:: /customer/:idcust")
   const x = req.params.idcust;
   try {
     const result = await db.query('SELECT * FROM customer WHERE "CUST_CODE" = \'' + x + '\';')
@@ -18,7 +18,7 @@ router.get("/customer/:idcust", async (req, res) => {
   }
 });
 
-// Create a new recipe
+/*
 router.post("/", verifyToken, async (req, res) => {
   const recipe = new RecipesModel({
     _id: new mongoose.Types.ObjectId(),
@@ -48,6 +48,7 @@ router.post("/", verifyToken, async (req, res) => {
     res.status(500).json(err);
   }
 });
+*/
 
 
 export { router as customerRouter };

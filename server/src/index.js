@@ -39,7 +39,7 @@ app.use(bodyParser.urlencoded({
 
 app.use("/api/v1/auth", userRouter);
 app.use("/orders", ordersRouter);
-app.use("/customer/:idcust", customerRouter);
+app.use("/customer", customerRouter);
 
 
 async function startServer() {
