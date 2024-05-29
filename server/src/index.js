@@ -46,7 +46,7 @@ async function startServer() {
   try {
 
     /* --- Server Starting --- */
-    app.listen(process.env.PORT || 4000, () => console.log("Server started"));
+    app.listen(process.env.PORT || 4000, () => console.log("Server started on port 4000"));
   } catch (error) {
     console.error("Error connecting to database:", error);
   }
