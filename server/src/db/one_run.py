@@ -2,9 +2,13 @@
 # Mi sono aiutato con gemini per fare prima
 
 # python -m pip install psycopg2
+# >oppure> pip install psycopg2-binary
 # sudo apt install postgresql
 # sudo su postgres
+# psql
 # initdb --locale=C.UTF-8 --encoding=UTF8 -D /var/lib/postgres/data
+# \q
+# createuser --interactive
 # createdb mydb
 # alter user postgres password 'password';
 
@@ -145,3 +149,5 @@ conn.close()
 print("Hack completato emmh.. query, query completata ^-^")
 
 #  - 0x3f
+
+#INSERT INTO orders VALUES('200100', '1000.00', '600.00', '08-01-2008', 'C00013', 'A003', 'SOD');
