@@ -39,14 +39,14 @@ app.use(bodyParser.urlencoded({
 
 app.use("/api/v1/auth", userRouter);
 app.use("/orders", ordersRouter);
-app.use("/customer/:idcust", customerRouter);
+app.use("/customer", customerRouter);
 
 
 async function startServer() {
   try {
 
     /* --- Server Starting --- */
-    app.listen(process.env.PORT || 4000, () => console.log("Server started"));
+    app.listen(process.env.PORT || 4000, () => console.log("Server started on port 4000"));
   } catch (error) {
     console.error("Error connecting to database:", error);
   }
