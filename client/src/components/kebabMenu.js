@@ -3,6 +3,7 @@ import "./kebabMenu.css"
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 function KebabMenu({ data, handleEdit, handleDelete }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +16,7 @@ function KebabMenu({ data, handleEdit, handleDelete }) {
   return (
     <div className="kebab" onClick={toggleMenu}>
       <div>
-       asd
+      <MoreVertIcon/>
       </div>
       {isOpen && (
         <div>
