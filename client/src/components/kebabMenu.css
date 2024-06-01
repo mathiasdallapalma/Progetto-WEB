@@ -1,0 +1,35 @@
+.kebab-container {
+    position: relative; /* Enable relative positioning for child elements */
+  }
+  
+  .menu {
+    position: relative;
+
+    position: relative; width: 0; height: 0;
+    top: -120%;
+    left: -1250%;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: left 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+  }
+  
+  .menu.open { /* Add a class for the open state */
+    left: 0; /* Slide the menu to the left when open */
+  }
+
+  .icon-container {
+    background-color: gainsboro;
+    border-radius: 8px;
+    display: flex; /* Enable flexbox for icon container */
+    flex: 1; /* Make the container take up all available space */
+    justify-content: space-between; /* Equally space icons horizontally */
+  }
+  
+  .icon {
+    padding: 10px;
+    height: 100%; /* Set icon height to match menu div (adjust based on icon size) */
+  }
+  

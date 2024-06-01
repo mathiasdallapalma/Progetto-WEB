@@ -1,0 +1,72 @@
+/* Center the table horizontally */
+.table {
+    margin: 0 auto;
+}
+
+.tableDiv{
+    height: 80vh;
+    overflow-y: scroll;
+}
+
+/* Style the caption */
+.table caption {
+    caption-side: top;
+    text-align: center;
+    padding: 10px;
+}
+
+/*Kebab styling */
+
+.kebab {
+    cursor: pointer;
+    padding: 0 16px;
+
+    figure {
+        width: 6px;
+        height: 6px;
+        border-radius: 5px;
+        background: gray;
+        margin: 3px 0;
+    }
+}
+
+/* Style the table head */
+.table thead {
+    background-color: #eee;
+    position: sticky;
+    top:0;
+    /* Light gray background */
+}
+
+/* Style the table head cells (th)
+        TODO modificare in modo che l'ultimo non sembri cliccabile, probabilmente dopo aver introdotto ARIA
+  */
+.table thead th {
+    padding: 10px;
+    border: 1px solid #ddd;
+    /* Light gray border */
+    cursor: pointer;
+    /* Indicate sortable headers */
+}
+
+/* Style the table body cells (td) */
+.table tbody td {
+    padding: 16px 24px;
+    /* Remove border between cells in the same row */
+    border-right: 0;
+    /* Remove right border */
+}
+
+/* Alternate row colors (zebra striping) */
+.table tbody tr:nth-child(even) {
+    background-color: #f5f5f5;
+    /* Light gray for even rows */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+
+.table{
+    overflow-x:auto;
+}
+}
