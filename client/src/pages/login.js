@@ -21,6 +21,7 @@ const Login = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // Stato per il messaggio di errore
 
   const navigate = useNavigate();
 
@@ -40,11 +41,23 @@ const Login = () => {
           'Content-Type': 'application/json', // Tipo di contenuto della richiesta
         }
       });
-      
 
-      Cookies.set("auth_token", result.data.token);
-      window.localStorage.setItem("userID", result.data.userID);
-      navigate("/home");
+      // Controlla se l'autenticazione è fallita
+      /*if (!result.data.success) {
+        alert(result.data.message); // Mostra un messaggio di errore all'utente
+        return; // Esci dalla funzione senza navigare alla home
+      }*/
+
+      if (result.data.success) {
+        Cookies.set("auth_token", result.data.token);
+        window.localStorage.setItem("userID", result.data.userID);
+        navigate("/home");
+      }
+      else {
+        setUsername("");
+        setPassword("");
+        setErrorMessage(result.data.message);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -72,6 +85,11 @@ const Login = () => {
             onChange={(event) => setPassword(event.target.value)}
           />
         </div>
+        {errorMessage && (
+          <div className="error-message">
+            {errorMessage}
+          </div>
+        )}
         <button type="submit">Login</button>
       </form>
     </div>

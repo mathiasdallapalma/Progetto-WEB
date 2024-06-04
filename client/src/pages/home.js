@@ -14,6 +14,7 @@ const apiProxy = 'http://localhost:4000';
 export const Home = () => {
 
   const userID = useGetUserID();
+  //console.log('utente loggato: ', userID);
   if (!userID) {
     console.log('not logged in');
     window.location.href = '/login';
@@ -29,9 +30,8 @@ export const Home = () => {
         <div className="Home">
             <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
             <h1>HOME</h1>
-            <Table />
-
-        
+            <h1>{userID}</h1>
+            <Table userID={userID} />
         </div>
     );
 };

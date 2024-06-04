@@ -4,15 +4,16 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 import './table.css';
 import KebabMenu from "./kebabMenu";
-
-
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const apiProxy = 'http://localhost:4000';
 //const apiProxy = 'https://puppeteer-render-hb03.onrender.com';
 
-const Table = () => {
+const Table = ({}) => {
+
+      const userID = window.localStorage.getItem("userID");
+      console.log('lo userID è: ', userID)
 
     const columns = [
         { id: 0, label: "Number", accessor: "ORD_NUM" },
@@ -38,11 +39,12 @@ const Table = () => {
 
     const fetchTours = async () => {
         try {
-            const response = (await axios.get(apiProxy + '/orders', { headers: { Authorization: Cookies.get('auth_token') } })).data;
+            console.log('provo la api con userID: ', userID)
+            //const response = (await axios.get(apiProxy + '/orders', { headers: { Authorization: Cookies.get('auth_token') } })).data;
+            //const response = (await axios.get(apiProxy + '/orders/order/', {userID}, {headers: {Authorization: Cookies.get('auth_token')}})).data;
+            const response = (await axios.get(`${apiProxy}/orders/order/${userID}`,{ headers: { Authorization: Cookies.get('auth_token')}})).data;
             console.log(response);
-
-            setTableData(response)
-
+            setTableData(response);
 
         } catch (err) {
             if (err.response.status == 401) {
@@ -59,7 +61,7 @@ const Table = () => {
         fetchTours();
         resetOrderField(-1);
 
-    }, []);
+    }, [userID]);
 
     const handleSorting = (sortField, id) => {
 
