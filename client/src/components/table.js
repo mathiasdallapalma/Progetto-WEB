@@ -10,24 +10,26 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 const apiProxy = 'http://localhost:4000';
 //const apiProxy = 'https://puppeteer-render-hb03.onrender.com';
 
-const Table = ({}) => {
+const Table = ({ userID, role }) => {
 
-      const userID = window.localStorage.getItem("userID");
-      console.log('lo userID è: ', userID)
+    //const userID = window.localStorage.getItem("userID");
+    console.log('lo userID è: ', userID)
 
     const columns = [
         { id: 0, label: "Number", accessor: "ORD_NUM" },
         { id: 1, label: "Amount", accessor: "ORD_AMOUNT" },
         { id: 2, label: "Date", accessor: "ORD_DATE" },
         { id: 3, label: "Customer", accessor: "CUST_CODE" },
-        { id: 4, label: "Agent", accessor: "AGENT_CODE" },
+        //{ id: 4, label: "Agent", accessor: "AGENT_CODE" },
+        role == "customer" && { id: 4, label: "Agent", accessor: "AGENT_CODE"},
         { id: 5, label: "Description", accessor: "ORD_DESCRIPTION" },
-    ];
+    ].filter(Boolean);
 
     const [tableData, setTableData] = useState([]);
     const [sortField, setSortField] = useState("");
-
     const [orderField, setOrderField] = useState([]);
+    const [selectedAgent, setSelectedAgent ] = useState(null);
+    const [agentInfo, setAgentInfo ] = useState(null);
 
     const resetOrderField = (except) => {
         console.log("resetOrderField")
@@ -103,29 +105,40 @@ const Table = ({}) => {
         // Implement your delete logic here
     };
 
-    const agentCodeHandler = (code) => {
+    const agentCodeHandler = async (agentCode) => {
         console.log("agent")
-        console.log(code)
-        
+        console.log(agentCode)
+        try {
+            const response = await(axios.get(`${apiProxy}/agents/${agentCode}`,{ headers: { Authorization: Cookies.get('auth_token')}}));
+            console.log("response:", response.data)
+            const data = response.data
+            const cleanedData = {
+                AGENT_CODE: data.AGENT_CODE.trim(),
+                AGENT_NAME: data.AGENT_NAME.trim(),
+                WORKING_AREA: data.WORKING_AREA.trim(),
+                COMMISSION: data.COMMISSION.trim(),
+                PHONE_NO: data.PHONE_NO.trim(),
+            }
+            setSelectedAgent(agentCode)
+            setAgentInfo(cleanedData)
+        } catch (error) {
+            console.error("Error agent info", error)
+        }
     };
 
 
     const custCodeHandler = (code) => {
-        console.log("agent")
+        console.log("customer")
         console.log(code)
         
     };
-
-
 
     return (
         <div className="tableDiv">
             <table className="table">
                 <caption>
-                    Developers currently enrolled in this course, column headers are sortable.
+                    Orders table. Click on agent to view agent info
                 </caption>
-
-
                 <thead>
                     <tr>
                         {columns.map(({ id, label, accessor }) => {
@@ -173,8 +186,17 @@ const Table = ({}) => {
                         );
                     })}
                 </tbody>
-
             </table>
+            {selectedAgent && agentInfo && (
+               <div className="agent-info">
+                    <h3>Agent Information</h3>
+                    <p><strong>Code:</strong> {agentInfo.AGENT_CODE}</p>
+                    <p><strong>Name:</strong> {agentInfo.AGENT_NAME}</p>
+                    <p><strong>Phone:</strong> {agentInfo.PHONE_NO}</p>
+                    <p><strong>Area:</strong> {agentInfo.WORKING_AREA}</p>
+                    <p><strong>Commission:</strong> {agentInfo.COMMISSION}</p>
+               </div>
+            )}
         </div>
 
     );
