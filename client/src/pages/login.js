@@ -49,9 +49,12 @@ const Login = () => {
       }*/
 
       if (result.data.success) {
+        console.log("il token è: ", result.data.token);
         Cookies.set("auth_token", result.data.token);
+        console.log("il ruolo è: ", result.data.role);
         window.localStorage.setItem("userID", result.data.userID);
-        navigate("/home");
+        window.localStorage.setItem("role", result.data.role);
+        navigate("/home", {state: {userID: result.data.userID, role: result.data.role } });
       }
       else {
         setUsername("");

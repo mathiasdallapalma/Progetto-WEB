@@ -21,6 +21,9 @@ async function testConnections() {
     // Selezione degli ordini di un customer
     const orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "CUST_CODE" = $1', ['C00007']);
     console.log('Orders:', orders.rows);
+
+    const agent = await db.queryAgents('SELECT * FROM "AGENTS" WHERE "AGENT_CODE" = $1', ['A010']);
+    console.log('agente:', agent.rows[0])
   } catch (error) {
     console.error('Error testing connections:', error);
   } finally {

@@ -28,10 +28,11 @@ router.post("/login", async (req, res) => {
 
     console.log("trovato user: ", tmp.rows)
     const pass = tmp.rows[0].password;
+    const role = tmp.rows[0].role;
     if (pass == password) {
     console.log('login riuscito: ', username)
     const token = jwt.sign({ id: username }, "secret")
-    return res.json({success: true, token, userID: username })
+    return res.json({success: true, token, userID: username, role: role })
     //res.json({ message: 'utente collegato'});
     }
     else {
