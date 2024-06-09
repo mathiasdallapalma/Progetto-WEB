@@ -31,7 +31,7 @@ router.post("/login", async (req, res) => {
     const role = tmp.rows[0].role;
     if (pass == password) {
     console.log('login riuscito: ', username)
-    const token = jwt.sign({ id: username }, "secret")
+    const token = jwt.sign({ id: username, role: role }, "secret")
     return res.json({success: true, token, userID: username, role: role })
     //res.json({ message: 'utente collegato'});
     }
@@ -62,7 +62,7 @@ router.post("/login", async (req, res) => {
 
 export { router as userRouter };
 
-export const verifyToken = (req, res, next) => {
+/*export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {
     jwt.verify(authHeader, "secret", (err) => {
@@ -74,4 +74,28 @@ export const verifyToken = (req, res, next) => {
   } else {
     res.sendStatus(401);
   }
-};
+};*/
+
+export const verifyToken = (req, res, next) => {
+    const token = req.headers.authorization;
+    if (token) {
+        jwt.verify(token, "secret", (err, decoded) => {
+            if (err) {
+                return res.sendStatus(403);
+            }
+            req.user = decoded;
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+}
+
+export const authorizeRoles = (...roles) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
+            return res.status(403).json({ message: "Access denied: insufficient permissions"})
+        }
+        next()
+    }
+}
