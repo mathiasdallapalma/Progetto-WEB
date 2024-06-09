@@ -28,8 +28,10 @@ const Table = ({ userID, role }) => {
     const [tableData, setTableData] = useState([]);
     const [sortField, setSortField] = useState("");
     const [orderField, setOrderField] = useState([]);
-    const [selectedAgent, setSelectedAgent ] = useState(null);
+    const [selectedAgent, setSelectedAgent] = useState(null);
+    const [selectedCustomer, setSelectedCustomer] = useState(null)
     const [agentInfo, setAgentInfo ] = useState(null);
+    const [customerInfo, setCustomerInfo] = useState(null);
 
     const resetOrderField = (except) => {
         console.log("resetOrderField")
@@ -44,9 +46,19 @@ const Table = ({ userID, role }) => {
             console.log('provo la api con userID: ', userID)
             //const response = (await axios.get(apiProxy + '/orders', { headers: { Authorization: Cookies.get('auth_token') } })).data;
             //const response = (await axios.get(apiProxy + '/orders/order/', {userID}, {headers: {Authorization: Cookies.get('auth_token')}})).data;
-            const response = (await axios.get(`${apiProxy}/orders/order/${userID}`,{ headers: { Authorization: Cookies.get('auth_token')}})).data;
-            console.log(response);
-            setTableData(response);
+            if (role == "customer") {
+                const response = (await axios.get(`${apiProxy}/orders/customers/${userID}`,{ headers: { Authorization: Cookies.get('auth_token')}})).data;
+                console.log(response)
+                setTableData(response)
+            }
+            if (role == "agent") {
+                const response = (await axios.get(`${apiProxy}/orders/agents/${userID}`, { headers: { Authorization: Cookies.get('auth_token')}})).data;
+                console.log(response)
+                setTableData(response)
+            }
+            //const response = (await axios.get(`${apiProxy}/orders/agents/${userID}`,{ headers: { Authorization: Cookies.get('auth_token')}})).data;
+            //console.log(response);
+            //setTableData(response);
 
         } catch (err) {
             if (err.response.status == 401) {
@@ -127,10 +139,31 @@ const Table = ({ userID, role }) => {
     };
 
 
-    const custCodeHandler = (code) => {
+    const custCodeHandler = async (custCode) => {
         console.log("customer")
-        console.log(code)
-        
+        console.log(custCode)
+        try {
+            const response = await(axios.get(`${apiProxy}/customers/${custCode}`, { headers: { Authorization: Cookies.get('auth_token')}}))
+            console.log("response:", response.data)
+            const data = response.data
+            const cleanedData = {
+                CUST_CODE: data.CUST_CODE.trim(),
+                CUST_NAME: data.CUST_NAME.trim(),
+                CUST_CITY: data.CUST_CITY.trim(),
+                WORKING_AREA: data.WORKING_AREA.trim(),
+                CUST_COUNTRY: data.CUST_COUNTRY.trim(),
+                GRADE: data.GRADE.trim(),
+                OPENING_AMT: data.OPENING_AMT.trim(),
+                RECEIVE_AMT: data.RECEIVE_AMT.trim(),
+                PAYMENT_AMT: data.PAYMENT_AMT.trim(),
+                OUTSTANDING_AMT: data.OUTSTANDING_AMT.trim(),
+                PHONE_NO: data.PHONE_NO.trim(),
+            }
+            setSelectedCustomer(custCode)
+            setCustomerInfo(cleanedData)
+        } catch (error) {
+            console.error("Error customer info", error)
+        }
     };
 
     return (
@@ -195,6 +228,22 @@ const Table = ({ userID, role }) => {
                     <p><strong>Phone:</strong> {agentInfo.PHONE_NO}</p>
                     <p><strong>Area:</strong> {agentInfo.WORKING_AREA}</p>
                     <p><strong>Commission:</strong> {agentInfo.COMMISSION}</p>
+               </div>
+            )}
+            {selectedCustomer && customerInfo && (
+               <div className="customer-info">
+                    <h3>Customer Information</h3>
+                    <p><strong>Code:</strong> {customerInfo.CUST_CODE}</p>
+                    <p><strong>Name:</strong> {customerInfo.CUST_NAME}</p>
+                    <p><strong>City:</strong> {customerInfo.CUST_CITY}</p>
+                    <p><strong>Area:</strong> {customerInfo.WORKING_AREA}</p>
+                    <p><strong>Country:</strong> {customerInfo.CUST_COUNTRY}</p>
+                    <p><strong>Grade:</strong> {customerInfo.GRADE}</p>
+                    <p><strong>Opening AMT:</strong> {customerInfo.OPENING_AMT}</p>
+                    <p><strong>Receive AMT:</strong> {customerInfo.RECEIVE_AMT}</p>
+                    <p><strong>Payment AMT:</strong> {customerInfo.PAYMENT_AMT}</p>
+                    <p><strong>Outstanding AMT:</strong> {customerInfo.OUTSTANDING_AMT}</p>
+                    <p><strong>Phone:</strong> {customerInfo.PHONE_NO}</p>
                </div>
             )}
         </div>

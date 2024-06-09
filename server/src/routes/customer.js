@@ -1,16 +1,20 @@
 import express from "express";
 import mongoose from "mongoose";
 import { verifyToken } from "./user.js";
-import * as db from './../db/index.js';
+import db from './../db/index.js';
 
 const router = express.Router();
 
-router.get("/:idcust", async (req, res) => {
-  console.log("API request:: /customer/:idcust")
-  const x = req.params.idcust;
+router.get("/:code", async (req, res) => {
+  console.log("API request:: /customer/:code")
+  const x = req.params.code;
   try {
-    const result = await db.query('SELECT * FROM customer WHERE "CUST_CODE" = \'' + x + '\';')
+    console.log("cerco customer con codice", x)
+    const result = await db.queryAgents('SELECT * FROM "CUSTOMER" WHERE "CUST_CODE" = $1', [x])
     console.log(result)
+    if (result.rowCount == 0) {
+        return res.status(404).json({ message: "Customer not found :(" })
+    }
     res.status(200).json(result.rows[0]);
   } catch (err) {
     res.status(500).json(err);
