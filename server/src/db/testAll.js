@@ -24,6 +24,9 @@ async function testConnections() {
 
     const agent = await db.queryAgents('SELECT * FROM "AGENTS" WHERE "AGENT_CODE" = $1', ['A010']);
     console.log('agente:', agent.rows[0])
+
+    const customer = await db.queryAgents('SELECT * FROM "CUSTOMER" WHERE "CUST_CODE" = $1', ['C00019']);
+    console.log('cliente:', customer.rows[0])
   } catch (error) {
     console.error('Error testing connections:', error);
   } finally {

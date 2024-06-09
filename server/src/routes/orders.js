@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 //GET ordini - customer
 // SELECT * FROM orders WHERE orders.CUST_CODE = x;
 // Stefano
-router.get("/order/:c_code", async (req, res) => {
+router.get("/customers/:c_code", async (req, res) => {
     //const { custCode } = req.params;
     const custCode = req.params.c_code;
     console.log("prendo ordini di ", custCode)
@@ -39,7 +39,7 @@ router.get("/order/:c_code", async (req, res) => {
 //GET ordini - agents
 // SELECT * FROM orders WHERE orders.AGENT_CODE = x;
 // Stefano
-router.get("/order/:a_code", async (req, res) => {
+router.get("/agents/:a_code", async (req, res) => {
     const agentCode = req.params.a_code;
     console.log("prendo gli ordini di agente ", agentCode);
     const orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "AGENT_CODE" = $1', [agentCode]);
