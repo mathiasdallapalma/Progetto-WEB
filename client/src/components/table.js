@@ -247,7 +247,6 @@ const Table = ({ userID, role }) => {
                </div>
             )}
         </div>
-
     );
 };
 
