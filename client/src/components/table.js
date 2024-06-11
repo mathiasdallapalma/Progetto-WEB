@@ -6,6 +6,7 @@ import './table.css';
 import KebabMenu from "./kebabMenu";
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import OrderEditPopup from './OrderEditPopup'
 
 const apiProxy = 'http://localhost:4000';
 //const apiProxy = 'https://puppeteer-render-hb03.onrender.com';
@@ -13,7 +14,7 @@ const apiProxy = 'http://localhost:4000';
 const Table = ({ userID, role }) => {
 
     //const userID = window.localStorage.getItem("userID");
-    console.log('lo userID è: ', userID)
+    //console.log('lo userID è: ', userID)
 
     const columns = [
         { id: 0, label: "Number", accessor: "ORD_NUM" },
@@ -32,6 +33,7 @@ const Table = ({ userID, role }) => {
     const [selectedCustomer, setSelectedCustomer] = useState(null)
     const [agentInfo, setAgentInfo ] = useState(null);
     const [customerInfo, setCustomerInfo] = useState(null);
+    const [selectedOrder, setSelectedOrder] = useState(null);
 
     const resetOrderField = (except) => {
         console.log("resetOrderField")
@@ -166,6 +168,33 @@ const Table = ({ userID, role }) => {
         }
     };
 
+    const handleEditClick =  (order) => {
+        setSelectedOrder(order);
+        console.log(order);
+    }
+
+    const handleSave = async (updatedOrder) => {
+        console.log('cliccato save')
+        console.log('ordine da cambiare è: ', updatedOrder)
+        console.log('chiave dell ordine: ', updatedOrder.ORD_NUM)
+        const ord_num = updatedOrder.ORD_NUM;
+        try {
+            const response = await axios.put(`${apiProxy}/orders/${ord_num}`, updatedOrder, {
+                headers: { Authorization: `Bearer ${Cookies.get('auth_token')}`}
+            });
+            if (response.status === 200) {
+                setTableData((prevData) => prevData.map((order) => (order.ORD_NUM === updatedOrder.ORD_NUM ? updatedOrder : order)));
+                setSelectedOrder(null)
+            }
+        } catch (error) {
+            console.error("Error updating order", error);
+        }
+    };
+
+    const handleClose = () => {
+        setSelectedOrder(null)
+    };
+
     return (
         <div className="tableDiv">
             <table className="table">
@@ -213,6 +242,9 @@ const Table = ({ userID, role }) => {
                                         </td>;
                                 })}
                                 <td>
+                                    {role === 'agent' && (
+                                        <button onClick={() => handleEditClick(data)}>Edit</button>
+                                    )}
                                     <KebabMenu data={data} handleEdit={handleEdit} handleDelete={handleDelete} />
                                 </td>
                             </tr>
@@ -220,6 +252,9 @@ const Table = ({ userID, role }) => {
                     })}
                 </tbody>
             </table>
+            {selectedOrder && (
+                <OrderEditPopup order={selectedOrder} onSave={handleSave} onClose={handleClose} />
+            )}
             {selectedAgent && agentInfo && (
                <div className="agent-info">
                     <h3>Agent Information</h3>
