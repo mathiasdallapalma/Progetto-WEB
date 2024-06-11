@@ -84,6 +84,7 @@ export const verifyToken = (req, res, next) => {
                 return res.sendStatus(403);
             }
             req.user = decoded;
+            console.log("decoded = ", decoded) //decoded =  { id: 'A010', role: 'agent', iat: 1718115267 }
             next();
         });
     } else {
