@@ -52,5 +52,42 @@ router.get("/agents/:a_code", verifyToken, authorizeRoles("agent"), async (req, 
     }
 })
 
+// PUT - modifica ordine
+// Stefano
+router.put("/:orderID", async (req, res) => {
+  const { orderID } = req.params;
+  const updatedOrder = req.body;
+  console.log('ordine nuovo: ', updatedOrder)
+
+
+  //const { ord_amount, advance_amount, ord_date, cust_code, agent_code, ord_description } = updatedOrder;
+  const ord_amount = updatedOrder.ORD_AMOUNT;
+  const advance_amount = updatedOrder.ADVANCE_AMOUNT;
+  const ord_date = updatedOrder.ORD_DATE;
+  const cust_code = updatedOrder.CUST_CODE;
+  const agent_code = updatedOrder.AGENT_CODE;
+  const ord_description = updatedOrder.ORD_DESCRIPTION;
+
+  try {
+    const query = `
+      UPDATE "ORDERS"
+      SET "ORD_AMOUNT" = $1, "ADVANCE_AMOUNT" = $2, "ORD_DATE" = $3, "CUST_CODE" = $4, "AGENT_CODE" = $5, "ORD_DESCRIPTION" = $6
+      WHERE "ORD_NUM" = $7
+      RETURNING *;
+    `;
+    const values = [ord_amount, advance_amount, ord_date, cust_code, agent_code, ord_description, orderID];
+
+    const result = await db.queryAgents(query, values);
+
+    if (result.rowCount === 0) {
+      res.status(404).json({ message: "Order not found" });
+    } else {
+      res.status(200).json(result.rows[0]);
+    }
+  } catch (err) {
+    res.status(500).json(err);
+    console.error(err);
+  }
+})
 
 export { router as ordersRouter };
