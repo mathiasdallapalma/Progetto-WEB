@@ -93,6 +93,8 @@ export const verifyToken = (req, res, next) => {
 
 export const authorizeRoles = (...roles) => {
     return (req, res, next) => {
+        console.log("ruolo utente: ", req.user.role)
+        console.log("ruolo richiesto: ", roles)
         if (!roles.includes(req.user.role)) {
             return res.status(403).json({ message: "Access denied: insufficient permissions"})
         }

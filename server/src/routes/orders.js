@@ -43,9 +43,20 @@ router.get("/agents/:a_code", verifyToken, authorizeRoles("agent"), async (req, 
     const agentCode = req.params.a_code;
     console.log("prendo gli ordini di agente ", agentCode);
     const orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "AGENT_CODE" = $1', [agentCode]);
+
+    const formattedOrders = orders.rows.map(order => {
+        // Imposta il fuso orario a zero
+        const dateWithZeroTimezone = new Date(order.ORD_DATE);
+        dateWithZeroTimezone.setMinutes(dateWithZeroTimezone.getMinutes() - dateWithZeroTimezone.getTimezoneOffset());
+        return {
+            ...order,
+            ORD_DATE: dateWithZeroTimezone.toISOString().split('T')[0]
+        }
+    })
+
     try {
-        console.log('Orders: ', orders.row)
-        res.status(200).json(orders.rows)
+        //res.status(200).json(orders.rows)
+        res.status(200).json(formattedOrders)
     } catch (err) {
         res.status(500).json(err)
         console.error(err)
