@@ -84,6 +84,7 @@ export const verifyToken = (req, res, next) => {
                 return res.sendStatus(403);
             }
             req.user = decoded;
+            console.log("decoded = ", decoded) //decoded =  { id: 'A010', role: 'agent', iat: 1718115267 }
             next();
         });
     } else {
@@ -93,6 +94,8 @@ export const verifyToken = (req, res, next) => {
 
 export const authorizeRoles = (...roles) => {
     return (req, res, next) => {
+        console.log("ruolo utente: ", req.user.role)
+        console.log("ruolo richiesto: ", roles)
         if (!roles.includes(req.user.role)) {
             return res.status(403).json({ message: "Access denied: insufficient permissions"})
         }
