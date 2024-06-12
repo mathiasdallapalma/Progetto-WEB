@@ -6,6 +6,8 @@
 .tableDiv {
     height: 80vh;
     overflow-y: scroll;
+    text-align: center;
+    padding-top: 20px;
 }
 
 /* Style the caption */
@@ -153,11 +155,11 @@ input:checked+.slider:before {
 
 label{
     margin:20px;
+    white-space: nowrap;
 }
 
 .sortcontainer {
-    display: flex;  /* Make the container a flexbox */
-    padding: 0 24%;
+    display: inline-flex;
   }
   
   .sort-options {  /* Style the new wrapper */
@@ -165,6 +167,30 @@ label{
     align-items: center;  /* Align elements vertically */
     flex-direction: column;
   }
+
+  .orderCard{
+    background-color: #ddd;
+    border-radius: 16px;
+    width: fit-content;
+    padding: 4px;
+    margin:4px;
+    display: inline-block;
+  }
+  .cardItem{
+    background-color: #eee;
+    display: inline-grid;
+    margin: 8px;
+    border: 1px solid black;
+    padding: 4px;
+    border-radius: 4px;
+  }
+  .cardHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+  }
+
 /* Responsive design */
 @media (max-width: 768px) {
 

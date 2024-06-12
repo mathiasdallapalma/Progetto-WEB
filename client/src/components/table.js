@@ -4,6 +4,7 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 import './table.css';
 import KebabMenu from "./kebabMenu";
+import OrderEditPopup from "./orderEdit";
 
 
 import IconButton from '@material-ui/core/IconButton';
@@ -16,22 +17,51 @@ var last_event = {
     sortField: "None",
     id: ""
 };
+var selectedOrder;
 
-const columns = [
+var role="customer" //TODO recuperare ruolo dal token/sessione
+
+
+var columns = [
     { id: 0, label: "Number", accessor: "ORD_NUM" },
     { id: 1, label: "Amount", accessor: "ORD_AMOUNT" },
     { id: 2, label: "Date", accessor: "ORD_DATE" },
+    
     { id: 3, label: "Customer", accessor: "CUST_CODE" },
     { id: 4, label: "Agent", accessor: "AGENT_CODE" },
     { id: 5, label: "Description", accessor: "ORD_DESCRIPTION" },
 ];
 
+if(role=="agent"){
+    columns = columns.filter((column) => column.accessor !== "AGENT_CODE");
+}
+if(role=="customer"){
+    columns = columns.filter((column) => column.accessor !== "CUST_CODE");
+}
+
 
 const Table = () => {
+    
 
     const [tableData, setTableData] = useState([]);
     const [sortField, setSortField] = useState("");
     const [orderField, setOrderField] = useState([]);
+
+    //stuff for edit popup
+    const [editTriggered,setEditTriggered]=useState(false);
+   
+
+    const handleSave=()=>{
+        console.log("saved");
+        //TODO aggiungere/copiare dal main logica
+        setEditTriggered(false);
+    }
+    const handleClose=()=>{
+        console.log("closing");
+        //TODO aggiungere/copiare dal main logica
+        setEditTriggered(false);
+    }
+
 
 
     const resetOrderField = (except) => {
@@ -113,7 +143,6 @@ const Table = () => {
 
     }
 
-
     const handleSorting2 = (event) => {
 
         const sortField = event.target.value;
@@ -130,6 +159,8 @@ const Table = () => {
     const handleEdit = (data) => {
         console.log("edit")
         console.log(data)
+        setEditTriggered(true);
+        selectedOrder=data;
         // Implement your edit logic here
     };
 
@@ -162,7 +193,7 @@ const Table = () => {
                 orderField[columns[i].id] = "asc";
         }
 
-        if(last_event.sortField!="None")
+        if (last_event.sortField != "None")
             sortTableData(last_event.sortField, last_event.id);
 
     }
@@ -225,57 +256,88 @@ const Table = () => {
                     </tbody>
 
                 </table>
+                {editTriggered && (
+
+                    <div>
+                        <OrderEditPopup order={selectedOrder} onSave={handleSave} onClose={handleClose} />
+                    </div>
+                )}
             </div>
 
         );
     }
     else {
-        return (<div className="tableDiv">
-            <div className="sortcontainer">
+        return (
+            <div>
+                <div className="sortcontainer">
 
-                <label for="order-field">Sort by:</label>
-                <select id="order-field" name="order-field" onChange={handleSorting2}>
-                    <option id="-1" value="None">---</option>
-                    {columns.map(({ id, label, accessor }) => {
-                        return (
-                            <option id={id} value={accessor}>{label}</option>
-                        );
-                    })}
-                </select>
+                    <label for="order-field">Sort by:</label>
+                    <select id="order-field" name="order-field" onChange={handleSorting2}>
+                        <option id="-1" value="None">---</option>
+                        {columns.map(({ id, label, accessor }) => {
+                            return (
+                                <option id={id} value={accessor}>{label}</option>
+                            );
+                        })}
+                    </select>
 
-                <div class="sort-options">  Asc - Desc
-                    <label class="switch">
-                        <input type="checkbox" onChange={handleSwitch}></input>
-                        <span class="slider round"></span>
-                    </label>
+                    <div class="sort-options">  Asc - Desc
+                        <label class="switch">
+                            <input type="checkbox" onChange={handleSwitch}></input>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
                 </div>
 
-            </div>
-            {tableData.map((data) => {
-                return (
-                    <tr key={data.id}>
-                        {columns.map(({ accessor }) => {
-                            const tData = data[accessor] ? data[accessor] : "——";
-                            let clickHandler = null
-                            if (accessor === "CUST_CODE") {
-                                clickHandler = custCodeHandler
-                            } else if (accessor === "AGENT_CODE") {
-                                clickHandler = agentCodeHandler
-                            }
+                <div className="tableDiv">
 
-                            return <td style={{ cursor: clickHandler ? 'pointer' : 'default' }}
-                                key={accessor + data.id}
-                                onClick={clickHandler ? () => clickHandler(data[accessor]) : null}>
-                                {tData}
-                            </td>;
-                        })}
-                        <td style={{ width: '115 px' }}>
-                            <KebabMenu data={data} handleEdit={handleEdit} handleDelete={handleDelete} />
-                        </td>
-                    </tr>
-                );
-            })}
-        </div>)
+
+                    {tableData.map((data) => {
+
+                        return (
+                            <div key={data.id} className="orderCard">
+                                <div className="cardHeader">
+                                    <p><b>N°: </b>{data["ORD_NUM"]}</p>
+                                    <KebabMenu data={data} handleEdit={handleEdit} handleDelete={handleDelete} />
+                                </div>
+
+                                {columns.map(({ accessor, label }, index) => { // Destructure accessor and label
+
+                                    if (index != 0) {
+                                        const tData = data[accessor] ? data[accessor] : "——";
+                                        let clickHandler = null
+                                        if (accessor === "CUST_CODE") {
+                                            clickHandler = custCodeHandler
+                                        } else if (accessor === "AGENT_CODE") {
+                                            clickHandler = agentCodeHandler
+                                        }
+
+                                        return <p style={{ cursor: clickHandler ? 'pointer' : 'default' }}
+                                            key={accessor + data.id}
+                                            onClick={clickHandler ? () => clickHandler(data[accessor]) : null}
+                                            className="cardItem">
+                                            <b>{label} : </b> {tData}
+                                        </p>;
+                                    }
+
+                                })}
+
+
+
+
+                            </div>
+                        );
+                    })}
+
+                </div>
+                {editTriggered && (
+                    <OrderEditPopup order={selectedOrder} onSave={handleSave} onClose={handleClose} />
+                )}
+            </div>
+
+        )
+
     }
 };
 

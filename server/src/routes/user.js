@@ -6,8 +6,8 @@ import * as db from './../db/index.js';
 const router = express.Router();
 
 // tests Acqua
-const result = await db.query('SELECT NOW()')
-console.log(result.rows[0])
+const result =  db.query('SELECT NOW()')
+console.log(result.rows)
 // fine test Acqua
 
 

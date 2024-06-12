@@ -52,7 +52,7 @@ async function startServer() {
   }
 }
 
-await startServer();
+ startServer();
 
 
 

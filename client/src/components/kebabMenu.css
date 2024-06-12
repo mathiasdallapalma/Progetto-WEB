@@ -20,7 +20,7 @@
   }
 
   .icon-container {
-    background-color: gainsboro;
+    background-color:#ccc;
     border-radius: 8px;
     display: flex; /* Enable flexbox for icon container */
     flex: 1; /* Make the container take up all available space */
