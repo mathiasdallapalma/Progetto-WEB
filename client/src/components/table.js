@@ -203,6 +203,11 @@ const Table = ({ userID, role }) => {
         setCustomerInfo(null);
     };
 
+    const closeAgentInfo = () => {
+        setSelectedAgent(null);
+        setAgentInfo(null);
+    }
+
     return (
         <div className="tableDiv">
             <table className="table" role="table" aria-label="Tabella ordini" aria-describedby="table_descr">
@@ -267,7 +272,7 @@ const Table = ({ userID, role }) => {
                 <OrderEditPopup order={selectedOrder} onSave={handleSave} onClose={handleClose} />
             )}
             {selectedAgent && agentInfo && (
-               <AgentInfo agentInfo={agentInfo} />
+               <AgentInfo agentInfo={agentInfo} onClose={closeAgentInfo} />
             )}
             {selectedCustomer && customerInfo && (
                <CustomerInfo customerInfo={customerInfo} onClose={closeCustomerInfo} />
