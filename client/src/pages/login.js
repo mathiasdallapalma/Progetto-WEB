@@ -67,12 +67,12 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-container">
-      <form onSubmit={handleSubmit}>
+    <div aria-label="Login page" className="auth-container">
+      <form onSubmit={handleSubmit} role="form">
         <h2>Login</h2>
         <div className="form-group">
           <label htmlFor="username">Username:</label>
-          <input
+          <input placeholder="your username" role="input" aria-required="true" tabindex="0" aria-selected="true"
             type="text"
             id="username"
             value={username}
@@ -81,7 +81,7 @@ const Login = () => {
         </div>
         <div className="form-group">
           <label htmlFor="password">Password:</label>
-          <input
+          <input placeholder="your password" role="input" aria-required="true" tabindex="0" aria-selected="false"
             type="password"
             id="password"
             value={password}
@@ -89,11 +89,11 @@ const Login = () => {
           />
         </div>
         {errorMessage && (
-          <div className="error-message">
+          <div className="error-message" role="alert" aria-relevant="all">
             {errorMessage}
           </div>
         )}
-        <button type="submit">Login</button>
+        <button role="button" aria-roledescription="submit button" type="submit" tabindex="0" aria-selected="false">Login</button>
       </form>
     </div>
   );
