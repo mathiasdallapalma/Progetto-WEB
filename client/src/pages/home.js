@@ -27,11 +27,11 @@ export const Home = () => {
   }
     return (
 
-        <div className="Home">
+        <div aria-label="Homepage" className="Home">
             <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
             <h1>HOME</h1>
-            <h1>{user.userID}</h1>
-            <h1>{user.role}</h1>
+            <h1 aria-label="The username you logged in as">{user.userID}</h1>
+            <h1 aria-label="The role this account has">{user.role}</h1>
             <Table userID={user.userID} role={user.role}/>
         </div>
     );

@@ -18,6 +18,7 @@ const Table = ({ userID, role }) => {
     //const userID = window.localStorage.getItem("userID");
     //console.log('lo userID è: ', userID)
 
+    //TODO aggiungere un IF in base al ruolo visualizzo una tabella o un'altra, facciamo copia incolla e ciaone, non è corretto ma funziona
     const columns = [
         { id: 0, label: "Number", accessor: "ORD_NUM" },
         { id: 1, label: "Amount", accessor: "ORD_AMOUNT" },
@@ -204,12 +205,12 @@ const Table = ({ userID, role }) => {
 
     return (
         <div className="tableDiv">
-            <table className="table">
-                <caption>
+            <table className="table" role="table" aria-label="Tabella ordini" aria-describedby="table_descr">
+                <caption id="table_descr">
                     Orders table. Click on agent to view agent info
                 </caption>
-                <thead>
-                    <tr>
+                <thead role="rowgroup">
+                    <tr role="row">
                         {columns.map(({ id, label, accessor }) => {
 
                             let cl = "asd"
@@ -219,6 +220,8 @@ const Table = ({ userID, role }) => {
                                     key={accessor}
                                     onClick={() => handleSorting(accessor, id)}
                                     className={cl}
+                                    role="columnheader"
+                                    aria-label={label}
                                 >
                                     {label}{orderField[id] === "asc" ? ` \u25B4` : ""}{orderField[id] === "desc" ? " \u25BE" : ""}
 
@@ -229,10 +232,10 @@ const Table = ({ userID, role }) => {
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody role="rowgroup">
                     {tableData.map((data) => {
                         return (
-                            <tr key={data.id}>
+                            <tr key={data.id} role="row">
                                 {columns.map(({ accessor }) => {
                                     const tData = data[accessor] ? data[accessor] : "——";
                                     let clickHandler=null
@@ -244,7 +247,8 @@ const Table = ({ userID, role }) => {
 
                                     return <td style={{ cursor: clickHandler ? 'pointer' : 'default' }}
                                                 key={accessor + data.id} 
-                                                onClick={clickHandler ? () => clickHandler(data[accessor]) : null}>
+                                                onClick={clickHandler ? () => clickHandler(data[accessor]) : null}
+                                                role="cell">
                                         {tData} 
                                         </td>;
                                 })}
