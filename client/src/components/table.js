@@ -7,6 +7,8 @@ import KebabMenu from "./kebabMenu";
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import OrderEditPopup from './OrderEditPopup'
+import CustomerInfo from './CustomerInfo';
+import AgentInfo from './AgentInfo';
 
 const apiProxy = 'http://localhost:4000';
 //const apiProxy = 'https://puppeteer-render-hb03.onrender.com';
@@ -195,6 +197,11 @@ const Table = ({ userID, role }) => {
         setSelectedOrder(null)
     };
 
+    const closeCustomerInfo = () => {
+        setSelectedCustomer(null);
+        setCustomerInfo(null);
+    };
+
     return (
         <div className="tableDiv">
             <table className="table">
@@ -256,30 +263,10 @@ const Table = ({ userID, role }) => {
                 <OrderEditPopup order={selectedOrder} onSave={handleSave} onClose={handleClose} />
             )}
             {selectedAgent && agentInfo && (
-               <div className="agent-info">
-                    <h3>Agent Information</h3>
-                    <p><strong>Code:</strong> {agentInfo.AGENT_CODE}</p>
-                    <p><strong>Name:</strong> {agentInfo.AGENT_NAME}</p>
-                    <p><strong>Phone:</strong> {agentInfo.PHONE_NO}</p>
-                    <p><strong>Area:</strong> {agentInfo.WORKING_AREA}</p>
-                    <p><strong>Commission:</strong> {agentInfo.COMMISSION}</p>
-               </div>
+               <AgentInfo agentInfo={agentInfo} />
             )}
             {selectedCustomer && customerInfo && (
-               <div className="customer-info">
-                    <h3>Customer Information</h3>
-                    <p><strong>Code:</strong> {customerInfo.CUST_CODE}</p>
-                    <p><strong>Name:</strong> {customerInfo.CUST_NAME}</p>
-                    <p><strong>City:</strong> {customerInfo.CUST_CITY}</p>
-                    <p><strong>Area:</strong> {customerInfo.WORKING_AREA}</p>
-                    <p><strong>Country:</strong> {customerInfo.CUST_COUNTRY}</p>
-                    <p><strong>Grade:</strong> {customerInfo.GRADE}</p>
-                    <p><strong>Opening AMT:</strong> {customerInfo.OPENING_AMT}</p>
-                    <p><strong>Receive AMT:</strong> {customerInfo.RECEIVE_AMT}</p>
-                    <p><strong>Payment AMT:</strong> {customerInfo.PAYMENT_AMT}</p>
-                    <p><strong>Outstanding AMT:</strong> {customerInfo.OUTSTANDING_AMT}</p>
-                    <p><strong>Phone:</strong> {customerInfo.PHONE_NO}</p>
-               </div>
+               <CustomerInfo customerInfo={customerInfo} onClose={closeCustomerInfo} />
             )}
         </div>
     );
