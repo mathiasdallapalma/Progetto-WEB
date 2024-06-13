@@ -176,6 +176,10 @@ const Table = ({ userID, role }) => {
         console.log(order);
     }
 
+    const handleAddClick = () => {
+        console.log('add');
+    }
+
     const handleSave = async (updatedOrder) => {
         console.log('cliccato save')
         console.log('ordine da cambiare è: ', updatedOrder)
