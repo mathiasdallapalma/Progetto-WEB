@@ -29,38 +29,38 @@ const OrderEditPopup = ({ order, onSave, onClose }) => {
   if (!order) return null;
 
   return (
-    <div className="popup">
+    <div className="popup" role="alert" aria-relevant="all" aria-label="Edit order window">
       <div className="popup-content">
         <h2>Edit Order</h2>
-        <form onSubmit={handleSubmit} className="edit-form">
+        <form onSubmit={handleSubmit} className="edit-form" role="form">
           <div className="form-group">
-            <label>Customer Code</label>
-            <input name="CUST_CODE" value={orderData.CUST_CODE} onChange={handleChange} />
+            <label for="customer code">Customer Code</label>
+            <input name="CUST_CODE" value={orderData.CUST_CODE} onChange={handleChange} role="input" aria-required="false" tabindex="0" aria-selected="true"/>
           </div>
           <div className="form-group">
-            <label>Order Amount</label>
-            <input name="ORD_AMOUNT" value={orderData.ORD_AMOUNT} onChange={handleChange} />
+            <label for="order amount">Order Amount</label>
+            <input name="ORD_AMOUNT" value={orderData.ORD_AMOUNT} onChange={handleChange} role="input" aria-required="false" tabindex="0" aria-selected="false"/>
           </div>
           <div className="form-group">
-            <label>Advance Amount</label>
-            <input name="ADVANCE_AMOUNT" value={orderData.ADVANCE_AMOUNT} onChange={handleChange} />
+            <label for="advance amount">Advance Amount</label>
+            <input name="ADVANCE_AMOUNT" value={orderData.ADVANCE_AMOUNT} onChange={handleChange} role="input" aria-required="false" tabindex="0" aria-selected="false"/>
           </div>
           <div className="form-group">
-            <label>Order Date</label>
+            <label for="Order date" role="calendar" aria-roledescription="Date formatted as day / month / year as numbers">Order Date</label>
             <DatePicker
               selected={new Date(orderData.ORD_DATE)}
               onChange={handleDateChange}
               dateFormat="MM/dd/yyyy"
               className="date-picker"
-            />
+              role="input" aria-required="false" tabindex="0" aria-selected="false"/>
           </div>
           <div className="form-group">
-            <label>Order Description</label>
-            <input name="ORD_DESCRIPTION" value={orderData.ORD_DESCRIPTION} onChange={handleChange} />
+            <label for="order description">Order Description</label>
+            <input name="ORD_DESCRIPTION" value={orderData.ORD_DESCRIPTION} onChange={handleChange} role="input" aria-required="false" tabindex="0" aria-selected="false"/>
           </div>
           <div className="form-actions">
-            <button type="submit" className="btn btn-save">Save</button>
-            <button type="button" className="btn btn-cancel" onClick={onClose}>Cancel</button>
+            <button type="submit" className="btn btn-save" role="button" aria-roledescription="save button" tabindex="0" aria-selected="false">Save</button>
+            <button type="button" className="btn btn-cancel" onClick={onClose} role="button" aria-roledescription="cancel button" tabindex="0" aria-selected="false">Cancel</button>
           </div>
         </form>
       </div>
