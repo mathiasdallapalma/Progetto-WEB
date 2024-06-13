@@ -188,9 +188,9 @@ const Table = () => {
 
         for (let i = 0; i < columns.length; i++) {
             if (isChecked)
-                orderField[columns[i].id] = "desc";
-            else
                 orderField[columns[i].id] = "asc";
+            else
+                orderField[columns[i].id] = "desc";
         }
 
         if (last_event.sortField != "None")
