@@ -5,10 +5,13 @@ import Cookies from 'js-cookie';
 import './table.css';
 import KebabMenu from "./kebabMenu";
 import OrderEditPopup from "./orderEdit";
+import UserInfoPopup from "./userPopup"
+import DeletePopup from "./deletePopup";
 
 
-import IconButton from '@material-ui/core/IconButton';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
+
+
 
 const apiProxy = 'http://localhost:4000';
 //const apiProxy = 'https://puppeteer-render-hb03.onrender.com';
@@ -18,48 +21,59 @@ var last_event = {
     id: ""
 };
 var selectedOrder;
+var selectedAgent;
+var selectedCustomer;
+var toDelete;
 
-var role="customer" //TODO recuperare ruolo dal token/sessione
+var role = "custoer" //TODO recuperare ruolo dal token/sessione
 
 
 var columns = [
     { id: 0, label: "Number", accessor: "ORD_NUM" },
     { id: 1, label: "Amount", accessor: "ORD_AMOUNT" },
     { id: 2, label: "Date", accessor: "ORD_DATE" },
-    
     { id: 3, label: "Customer", accessor: "CUST_CODE" },
     { id: 4, label: "Agent", accessor: "AGENT_CODE" },
     { id: 5, label: "Description", accessor: "ORD_DESCRIPTION" },
 ];
 
-if(role=="agent"){
+if (role == "agent") {
     columns = columns.filter((column) => column.accessor !== "AGENT_CODE");
 }
-if(role=="customer"){
+if (role == "customer") {
     columns = columns.filter((column) => column.accessor !== "CUST_CODE");
 }
 
 
 const Table = () => {
-    
+
 
     const [tableData, setTableData] = useState([]);
     const [sortField, setSortField] = useState("");
     const [orderField, setOrderField] = useState([]);
 
-    //stuff for edit popup
-    const [editTriggered,setEditTriggered]=useState(false);
-   
+    //stuff for  popup
+    const [editTriggered, setEditTriggered] = useState(false);
+    const [showCostumer, setShowCostumer] = useState(false);
+    const [showAgent, setShowAgent] = useState(false);
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
 
-    const handleSave=()=>{
+    
+
+
+    const handleSave = () => {
         console.log("saved");
         //TODO aggiungere/copiare dal main logica
         setEditTriggered(false);
     }
-    const handleClose=()=>{
+    const handleClose = () => {
         console.log("closing");
         //TODO aggiungere/copiare dal main logica
         setEditTriggered(false);
+        setShowAgent(false);
+        setShowCostumer(false);
+        setShowDeletePopup(false);
+
     }
 
 
@@ -160,26 +174,34 @@ const Table = () => {
         console.log("edit")
         console.log(data)
         setEditTriggered(true);
-        selectedOrder=data;
+        selectedOrder = data;
         // Implement your edit logic here
     };
 
     const handleDelete = (data) => {
         console.log("delete")
         console.log(data)
+        setShowDeletePopup(true);
+        toDelete=data.ORD_NUM;
+
         // Implement your delete logic here
     };
 
-    const agentCodeHandler = (code) => {
-        console.log("agent")
-        console.log(code)
+    const deleteOrder = () => {
+        setShowDeletePopup(false);
+        console.log("cancello"+toDelete);
 
+    }
+
+    const agentCodeHandler = (code) => {
+        selectedAgent = code;
+        setShowAgent(true);
     };
 
 
     const custCodeHandler = (code) => {
-        console.log("agent")
-        console.log(code)
+        selectedCustomer = code;
+        setShowCostumer(true);
 
     };
 
@@ -224,7 +246,8 @@ const Table = () => {
                                     </th>
                                 );
                             })}
-                            <th className="lastCol"></th>
+                            {role !== "customer" && (
+                            <th className="lastCol"></th>)}
                         </tr>
                     </thead>
 
@@ -241,28 +264,56 @@ const Table = () => {
                                             clickHandler = agentCodeHandler
                                         }
 
-                                        return <td style={{ cursor: clickHandler ? 'pointer' : 'default' }}
+                                        return <td className={clickHandler ? 'cliccableTD' : 'defaultTD'}
                                             key={accessor + data.id}
                                             onClick={clickHandler ? () => clickHandler(data[accessor]) : null}>
                                             {tData}
                                         </td>;
                                     })}
-                                    <td style={{ width: '115 px' }}>
-                                        <KebabMenu data={data} handleEdit={handleEdit} handleDelete={handleDelete} />
-                                    </td>
+                                    {role !== "customer" && (
+                                        < td style={{ width: '115 px' }}>
+                                            <KebabMenu data={data} handleEdit={handleEdit} handleDelete={handleDelete} />
+                                        </td>
+                                    )
+                                    }
                                 </tr>
                             );
                         })}
                     </tbody>
 
                 </table>
-                {editTriggered && (
+                {
+                    editTriggered && (
+                        <div>
+                            <OrderEditPopup order={selectedOrder} onSave={handleSave} onClose={handleClose} />
+                        </div>
+                    )
+                }
+                {
+                    showCostumer && (
+                        <div>
+                            <UserInfoPopup code={selectedCustomer} onClose={handleClose} />
+                        </div>
+                    )
+                }
+                {
+                    showAgent && (
+                        <div>
+                            <UserInfoPopup code={selectedAgent} onClose={handleClose} />
+                        </div>
+                    )
+                }
+                {
+                    showDeletePopup && (
+                        <div>
+                            <DeletePopup code={toDelete} onSave={deleteOrder} onClose={handleClose} />
+                        </div>
+                    )
+                }
 
-                    <div>
-                        <OrderEditPopup order={selectedOrder} onSave={handleSave} onClose={handleClose} />
-                    </div>
-                )}
-            </div>
+
+
+            </div >
 
         );
     }
@@ -299,7 +350,9 @@ const Table = () => {
                             <div key={data.id} className="orderCard">
                                 <div className="cardHeader">
                                     <p><b>N°: </b>{data["ORD_NUM"]}</p>
-                                    <KebabMenu data={data} handleEdit={handleEdit} handleDelete={handleDelete} />
+                                    {role !== "customer" && (
+                                        <KebabMenu data={data} handleEdit={handleEdit} handleDelete={handleDelete} />
+                                    )}
                                 </div>
 
                                 {columns.map(({ accessor, label }, index) => { // Destructure accessor and label

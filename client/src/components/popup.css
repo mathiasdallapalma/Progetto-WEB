@@ -86,3 +86,8 @@
   .btn-cancel:hover {
     background-color: #e53935;
   }
+
+  .close-icon{
+    align-self: end;
+    cursor: pointer;
+  }

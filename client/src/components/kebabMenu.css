@@ -26,9 +26,12 @@
     flex: 1; /* Make the container take up all available space */
     justify-content: space-between; /* Equally space icons horizontally */
   }
+
+  
   
   .icon {
     padding: 10px;
-    height: 100%; /* Set icon height to match menu div (adjust based on icon size) */
+    scale: 1.2; /* Set icon height to match menu div (adjust based on icon size) */
+    color:black;
   }
   

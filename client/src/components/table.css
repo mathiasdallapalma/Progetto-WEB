@@ -33,7 +33,8 @@
 
 /* Style the table head */
 .table thead {
-    background-color: #eee;
+    background-color: #007bff;
+    color:#eee;
     position: sticky;
     top: 0;
     /* Light gray background */
@@ -169,7 +170,7 @@ label{
   }
 
   .orderCard{
-    background-color: #ddd;
+    background-color: #007bff; /*colore delle card*/
     border-radius: 16px;
     width: fit-content;
     padding: 4px;
@@ -185,18 +186,66 @@ label{
     border-radius: 4px;
   }
   .cardHeader{
+    color: #eee;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 
   }
 
-/* Responsive design */
-@media (max-width: 768px) {
+  .cliccableTD{
+    color:#007bff;
 
-    .table {
-        overflow-x: auto;
+    text-decoration: underline;
+    cursor: pointer;
+    
+  }
+
+  p{
+    margin: 5px;
+  font-size: larger;
+  }
+
+  /* Responsive design */
+@media (max-width: 900px) {
+    .kebab {
+        left: auto;
     }
 
+    .cardHeader {
+        color: #eee;
+        display: flex;
+        flex-direction: row;
+        align-items: self-start;
+        align-content: revert;
+        text-align: right;
+        justify-content: flex-end;
+        margin: 0 5px;
+      }
+
+      .orderCard{
+        background-color: #007bff; /*colore delle card*/
+        border-radius: 16px;
+        width: fit-content;
+        padding: 4px;
+        margin:4px;
+        display: inline-block;
+      }
+      .cardItem{
+        background-color: #eee;
+        display: inline-grid;
+        margin: 8px;
+        border: 1px solid black;
+        padding: 4px;
+        border-radius: 4px;
+      }
+      .cardHeader{
+        color: #eee;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    
+      }
 
 }
+
