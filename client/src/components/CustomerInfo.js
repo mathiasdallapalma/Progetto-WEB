@@ -1,8 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Cookies from 'js-cookie';
 import './CustomerInfo.css';
 
-const CustomerInfo = ({ customerInfo, onClose }) => {
-  if (!customerInfo) return null;
+const apiProxy = 'http://localhost:4000';
+
+const CustomerInfo = ({ code, onClose }) => {
+  const [customerInfo, setCustomerInfo] = useState({});
+
+  console.log("code in component "+code)
+
+  useEffect(() => { //questo non si ferma
+    fetchCustomerInfo();
+  }, []);
+
+  const fetchCustomerInfo = async () => {
+    try {
+      const response = await (axios.get(`${apiProxy}/customers/${code}`, { headers: { Authorization: Cookies.get('auth_token') } }))
+      console.log("response:", response.data)
+      const data = response.data
+      const cleanedData = {
+        CUST_CODE: data.CUST_CODE.trim(),
+        CUST_NAME: data.CUST_NAME.trim(),
+        CUST_CITY: data.CUST_CITY.trim(),
+        WORKING_AREA: data.WORKING_AREA.trim(),
+        CUST_COUNTRY: data.CUST_COUNTRY.trim(),
+        GRADE: data.GRADE.trim(),
+        OPENING_AMT: data.OPENING_AMT.trim(),
+        RECEIVE_AMT: data.RECEIVE_AMT.trim(),
+        PAYMENT_AMT: data.PAYMENT_AMT.trim(),
+        OUTSTANDING_AMT: data.OUTSTANDING_AMT.trim(),
+        PHONE_NO: data.PHONE_NO.trim(),
+      }
+
+      setCustomerInfo(cleanedData)
+    } catch (error) {
+      console.error("Error customer info", error)
+    }
+  }
+
+
+
+
+
+
+
+
 
   return (
     <div className="popup" role="alert" aria-relevant="all" aria-label="Customer info window">

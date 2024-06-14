@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   console.log("API request:: /orders/")
   try {
-    const result = await db.queryAgents('SELECT * FROM "ORDERS";')
+    const result = await db.queryAgents('SELECT * FROM ORDERS;')
     //console.log(result)
     res.status(200).json(result.rows);
   } catch (err) {
@@ -26,7 +26,7 @@ router.get("/customers/:c_code", verifyToken, authorizeRoles("customer"), async 
     //const { custCode } = req.params;
     const custCode = req.params.c_code;
     console.log("prendo ordini di ", custCode)
-    const orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "CUST_CODE" = $1', [custCode]);
+    const orders = await db.queryAgents('SELECT * FROM ORDERS WHERE "CUST_CODE" = $1', [custCode]);
     try {
         console.log('Orders: ', orders.rows)
         res.status(200).json(orders.rows)
@@ -42,7 +42,7 @@ router.get("/customers/:c_code", verifyToken, authorizeRoles("customer"), async 
 router.get("/agents/:a_code", verifyToken, authorizeRoles("agent"), async (req, res) => {
     const agentCode = req.params.a_code;
     console.log("prendo gli ordini di agente ", agentCode);
-    const orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "AGENT_CODE" = $1', [agentCode]);
+    const orders = await db.queryAgents('SELECT * FROM ORDERS WHERE "AGENT_CODE" = $1', [agentCode]);
 
     const formattedOrders = orders.rows.map(order => {
         // Imposta il fuso orario a zero

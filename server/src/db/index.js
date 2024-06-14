@@ -5,18 +5,20 @@ const { Pool } = pg
  
 const agentPool = new Pool({
     host: 'localhost',
-    //user: 'postgres',
-    //password: 'password',
+    user: 'postgres',
+    password: 'password',
     port: '5432',
     max: 20,
-    database: 'postgres',
+    database: 'mydb',
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
   })
 
 const userPool = new Pool({
     host: 'localhost',
-    database: 'stefanomodenese',
+    user: 'postgres',
+    password: 'password',
+    database: 'auth',
     port: '5432',
     max: 20,
     idleTimeoutMillis: 30000,

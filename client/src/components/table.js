@@ -4,14 +4,10 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 import './table.css';
 import KebabMenu from "./kebabMenu";
-import OrderEditPopup from "./orderEdit";
-import UserInfoPopup from "./userPopup"
+import OrderEditPopup from "./OrderEditPopup";
 import DeletePopup from "./deletePopup";
-
-
-
-
-
+import AgentInfo from "./AgentInfo";
+import CustomerInfo from "./CustomerInfo"
 
 const apiProxy = 'http://localhost:4000';
 //const apiProxy = 'https://puppeteer-render-hb03.onrender.com';
@@ -20,9 +16,11 @@ var last_event = {
     sortField: "None",
     id: ""
 };
+
 var selectedOrder;
 var selectedAgent;
 var selectedCustomer;
+
 var toDelete;
 
 var role = "custoer" //TODO recuperare ruolo dal token/sessione
@@ -45,17 +43,18 @@ if (role == "customer") {
 }
 
 
-const Table = () => {
+const Table = ({userID, role} ) => {
 
 
     const [tableData, setTableData] = useState([]);
     const [sortField, setSortField] = useState("");
     const [orderField, setOrderField] = useState([]);
-    const [selectedAgent, setSelectedAgent] = useState(null);
-    const [selectedCustomer, setSelectedCustomer] = useState(null)
+    //const [selectedAgent, setSelectedAgent] = useState(null);
+    //const [selectedCustomer, setSelectedCustomer] = useState(null)
     const [agentInfo, setAgentInfo ] = useState(null);
-    const [customerInfo, setCustomerInfo] = useState(null);
-    const [selectedOrder, setSelectedOrder] = useState(null);
+    
+    
+    const [selectedOrder, setSelectedOrder] = useState({});
 
     //stuff for  popup
     const [editTriggered, setEditTriggered] = useState(false);
@@ -93,7 +92,9 @@ const Table = () => {
     const fetchOrders = async () => {
         try {
             console.log('provo la api con userID: ', userID)
+            console.log(role)
             //const response = (await axios.get(apiProxy + '/orders', { headers: { Authorization: Cookies.get('auth_token') } })).data;
+            //console.log(response)
             //const response = (await axios.get(apiProxy + '/orders/order/', {userID}, {headers: {Authorization: Cookies.get('auth_token')}})).data;
             if (role == "customer") {
                 const response = (await axios.get(`${apiProxy}/orders/customers/${userID}`,{ headers: { Authorization: Cookies.get('auth_token')}})).data;
@@ -110,6 +111,7 @@ const Table = () => {
             //setTableData(response);
 
         } catch (err) {
+            console.log(err)
             if (err.response.status == 401) {
                 console.log('not logged in');
                 window.location.href = '/login';
@@ -190,7 +192,7 @@ const Table = () => {
         console.log("edit")
         console.log(data)
         setEditTriggered(true);
-        selectedOrder = data;
+        setSelectedOrder(data);
         // Implement your edit logic here
     };
 
@@ -258,8 +260,9 @@ const Table = () => {
         setSelectedOrder(order);
         console.log(order);
     }
+*/
 
-    */
+   
 
     const deleteOrder = () => {
         setShowDeletePopup(false);
@@ -268,14 +271,20 @@ const Table = () => {
     }
 
     const agentCodeHandler = (code) => {
-        selectedAgent = code;
+        console.log("agent")
+        selectedAgent=code;
         setShowAgent(true);
     };
 
 
     const custCodeHandler = (code) => {
-        selectedCustomer = code;
-        setShowCostumer(true);
+        console.log("cust code "+ code)
+
+        selectedCustomer=code;
+        setShowCostumer(true)
+        
+
+        console.log(selectedCustomer)
 
     };
 
@@ -366,14 +375,15 @@ const Table = () => {
                 {
                     showCostumer && (
                         <div>
-                            <UserInfoPopup code={selectedCustomer} onClose={handleClose} />
+                            <CustomerInfo code={selectedCustomer} onClose={handleClose} />
                         </div>
                     )
                 }
                 {
                     showAgent && (
+                        
                         <div>
-                            <UserInfoPopup code={selectedAgent} onClose={handleClose} />
+                            <AgentInfo code={selectedAgent} onClose={handleClose} />
                         </div>
                     )
                 }
@@ -458,9 +468,34 @@ const Table = () => {
                     })}
 
                 </div>
-                {editTriggered && (
-                    <OrderEditPopup order={selectedOrder} onSave={handleSave} onClose={handleClose} />
-                )}
+                {
+                    editTriggered && (
+                        <div>
+                            <OrderEditPopup order={selectedOrder} onSave={handleSave} onClose={handleClose} />
+                        </div>
+                    )
+                }
+                {
+                    showCostumer && (
+                        <div>
+                            <CustomerInfo code={selectedCustomer} onClose={handleClose} />
+                        </div>
+                    )
+                }
+                {
+                    showAgent && (
+                        <div>
+                            <AgentInfo code={selectedAgent} onClose={handleClose} />
+                        </div>
+                    )
+                }
+                {
+                    showDeletePopup && (
+                        <div>
+                            <DeletePopup code={toDelete} onSave={deleteOrder} onClose={handleClose} />
+                        </div>
+                    )
+                }
             </div>
 
         )
