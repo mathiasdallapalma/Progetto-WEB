@@ -176,6 +176,10 @@ const Table = ({ userID, role }) => {
         console.log(order);
     }
 
+    const handleAddClick = () => {
+        console.log('add');
+    }
+
     const handleSave = async (updatedOrder) => {
         console.log('cliccato save')
         console.log('ordine da cambiare è: ', updatedOrder)
@@ -259,7 +263,7 @@ const Table = ({ userID, role }) => {
                                 })}
                                 <td>
                                     {role === 'agent' && (
-                                        <button onClick={() => handleEditClick(data)}>Edit</button>
+                                        <button onClick={() => handleEditClick(data) }>Edit</button>
                                     )}
                                     <KebabMenu data={data} handleEdit={handleEdit} handleDelete={handleDelete} />
                                 </td>
@@ -272,10 +276,10 @@ const Table = ({ userID, role }) => {
                 <OrderEditPopup order={selectedOrder} onSave={handleSave} onClose={handleClose} />
             )}
             {selectedAgent && agentInfo && (
-               <AgentInfo agentInfo={agentInfo} onClose={closeAgentInfo} />
+               <AgentInfo agentInfo={agentInfo} onClose={closeAgentInfo} haspopup="agentinfo"/>
             )}
             {selectedCustomer && customerInfo && (
-               <CustomerInfo customerInfo={customerInfo} onClose={closeCustomerInfo} />
+               <CustomerInfo customerInfo={customerInfo} onClose={closeCustomerInfo} haspopup="customerinfo"/>
             )}
         </div>
     );

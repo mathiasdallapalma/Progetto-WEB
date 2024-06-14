@@ -15,6 +15,13 @@
     padding: 10px;
 }
 
+.table thead tr {
+  background-color: #007bff;
+  color: #ffffff;
+  text-align: center;
+  font-weight: bold;
+}
+
 /*Kebab styling */
 
 .kebab {

@@ -20,10 +20,10 @@ function KebabMenu({ data, handleEdit, handleDelete }) {
       </div>
       {isOpen && (
         <div>
-        <div className="menu">
+        <div className="menu" role="menu" aria-label="options menu">
             <div className="icon-container"> {/* New container for icons */}
-                <EditIcon onClick={()=>{handleEdit(data)}} className="icon" /> {/* Add icon class */}
-                <DeleteIcon onClick={()=>{handleDelete(data)}} className="icon" />
+                <EditIcon onClick={()=>{handleEdit(data)}} className="icon" role="button" aria-label="edit button" tabindex="0" haspopup="edit"/> {/* Add icon class */}
+                <DeleteIcon onClick={()=>{handleDelete(data)}} className="icon" role="button" aria-label="delete button" tabindex="0"/>
           </div>
         </div>
         </div>
