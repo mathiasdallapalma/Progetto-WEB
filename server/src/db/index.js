@@ -16,7 +16,7 @@ const agentPool = new Pool({
 
 const userPool = new Pool({
     host: 'localhost',
-    database: 'stefanomodenese',
+    database: 'auth',
     port: '5432',
     max: 20,
     idleTimeoutMillis: 30000,

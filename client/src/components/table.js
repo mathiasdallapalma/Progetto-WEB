@@ -165,6 +165,7 @@ const Table = ({ userID, role }) => {
                 PHONE_NO: data.PHONE_NO.trim(),
             }
             setSelectedCustomer(custCode)
+            console.log('SelectedCustomer è: ', selectedCustomer)
             setCustomerInfo(cleanedData)
         } catch (error) {
             console.error("Error customer info", error)
