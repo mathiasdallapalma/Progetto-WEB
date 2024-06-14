@@ -15,9 +15,11 @@ function KebabMenu({ data, handleEdit, handleDelete }) {
 
   return (
     <div className="kebab" onClick={toggleMenu}>
-      <div>
+      {!isOpen && (
+      
       <MoreVertIcon/>
-      </div>
+      
+      )}
       {isOpen && (
         <div>
         <div className="menu" role="menu" aria-label="options menu">
