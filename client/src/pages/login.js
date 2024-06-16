@@ -27,8 +27,16 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    try {
+    if (!username && !password) {
+        setErrorMessage("Username and Password are required");
+    }
+    else if (!username) {
+        setErrorMessage("Username is required");
+    }
+    else if (!password) {
+        setErrorMessage("Password is required");
+    }
+    else try {
       console.log(apiProxy + '/api/v1/auth/login')
 
 
@@ -66,12 +74,12 @@ const Login = () => {
     }
   };
 
-  return (
+  /*return (
     <div aria-label="Login page" className="auth-container">
       <form onSubmit={handleSubmit} role="form">
         <h2>Login</h2>
         <div className="form-group">
-          <label htmlFor="username">Username:</label>
+          <label htmlFor="username">Username <span class="required">*</span></label>
           <input placeholder="Insert username" role="input" aria-required="true" tabindex="0" aria-selected="true"
             type="text"
             id="username"
@@ -80,7 +88,7 @@ const Login = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="password">Password <span class="required">*</span></label>
           <input placeholder="Insert password" role="input" aria-required="true" tabindex="0" aria-selected="false"
             type="password"
             id="password"
@@ -96,6 +104,28 @@ const Login = () => {
         <button className="login-btn" aria-label="Submit" type="submit" role="button" aria-roledescription="submit button" tabindex="0" aria-selected="false">Login</button>
       </form>
     </div>
-  );
+  );*/
+
+  return (
+    <div aria-label="Login page" class="auth-container">
+      <form onSubmit={handleSubmit} role="form">
+        <h2>Login</h2>
+        <div class="form-group">
+          <label htmlFor="username">Username <span class="required" aria-hidden="true">*</span></label>
+          <input placeholder="Insert username" aria-required="true" type="text" id="username" value={username} onChange={(event) => setUsername(event.target.value)} aria-labelledby="username-label" />
+        </div>
+        <div class="form-group">
+          <label htmlFor="password">Password <span class="required" aria-hidden="true">*</span></label>
+          <input placeholder="Insert password" aria-required="true" type="password" id="password" value={password} onChange={(event) => setPassword(event.target.value)} aria-labelledby="password-label" />
+        </div>
+        {errorMessage && (
+          <div className="error-message" role="alert">
+            {errorMessage}
+          </div>
+        )}
+        <button class="login-btn" type="submit" aria-label="Login">Login</button>
+      </form>
+    </div>
+  )
 };
 
