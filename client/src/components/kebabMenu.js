@@ -14,7 +14,7 @@ function KebabMenu({ data, handleEdit, handleDelete }) {
   };
 
   return (
-    <div className="kebab" onClick={toggleMenu}>
+    <div className="kebab" onClick={toggleMenu} aria-label="More options button" tabindex="0">
       {!isOpen && (
       
       <MoreVertIcon/>
@@ -23,9 +23,11 @@ function KebabMenu({ data, handleEdit, handleDelete }) {
       {isOpen && (
         <div>
         <div className="menu" role="menu" aria-label="options menu">
-            <div className="icon-container"> {/* New container for icons */}
-                <EditIcon onClick={()=>{handleEdit(data)}} className="icon" role="button" aria-label="edit button" tabindex="0" haspopup="edit"/> {/* Add icon class */}
-                <DeleteIcon onClick={()=>{handleDelete(data)}} className="icon" role="button" aria-label="delete button" tabindex="0"/>
+            <div className="icon-container" role="button" aria-label="More options button" tabindex="0"> {/* New container for icons */}
+                <EditIcon onClick={()=>{handleEdit(data)}} className="icon" role="button" aria-label="edit button" 
+                tabindex="0" haspopup="edit"/> {/* Add icon class */}
+                <DeleteIcon onClick={()=>{handleDelete(data)}} className="icon" role="button" aria-label="delete button" 
+                tabindex="0" haspopup="delete"/>
           </div>
         </div>
         </div>

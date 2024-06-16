@@ -64,18 +64,21 @@ const OrderEditPopup = ({ order, onSave, onClose }) => {
           <form onSubmit={handleSubmit} className="edit-form" role="form">
             <div className="form-group">
               <label htmlFor="customer-code">Customer Code</label>
-              <input name="CUST_CODE" value={orderData.CUST_CODE} onChange={handleChange} role="input" aria-required="false" tabIndex="0" aria-selected="true" id="customer-code"/>
+              <input name="CUST_CODE" value={orderData.CUST_CODE} onChange={handleChange} role="input" aria-required="false" 
+              tabIndex="0" aria-selected="true" id="customer-code"/>
             </div>
             <div className="form-group">
               <label htmlFor="order-amount">Order Amount</label>
-              <input name="ORD_AMOUNT" value={orderData.ORD_AMOUNT} onChange={handleChange} role="input" aria-required="false" tabIndex="0" aria-selected="false" id="order-amount"/>
+              <input name="ORD_AMOUNT" value={orderData.ORD_AMOUNT} onChange={handleChange} role="input" aria-required="false" 
+              tabIndex="0" aria-selected="false" id="order-amount"/>
             </div>
             <div className="form-group">
               <label htmlFor="advance-amount">Advance Amount</label>
-              <input name="ADVANCE_AMOUNT" value={orderData.ADVANCE_AMOUNT} onChange={handleChange} role="input" aria-required="false" tabIndex="0" aria-selected="false" id="advance-amount"/>
+              <input name="ADVANCE_AMOUNT" value={orderData.ADVANCE_AMOUNT} onChange={handleChange} role="input" aria-required="false" 
+              tabIndex="0" aria-selected="false" id="advance-amount"/>
             </div>
             <div className="form-group">
-              <label htmlFor="order-date" role="calendar" aria-roledescription="Date formatted as day / month / year as numbers">Order Date</label>
+              <label htmlFor="order-date" aria-roledescription="Date formatted as day / month / year as numbers">Order Date</label>
               <DatePicker
                 selected={new Date(orderData.ORD_DATE)}
                 onChange={handleDateChange}
@@ -85,11 +88,14 @@ const OrderEditPopup = ({ order, onSave, onClose }) => {
             </div>
             <div className="form-group">
               <label htmlFor="order-description">Order Description</label>
-              <input name="ORD_DESCRIPTION" value={orderData.ORD_DESCRIPTION} onChange={handleChange} role="input" aria-required="false" tabIndex="0" aria-selected="false" id="order-description"/>
+              <input name="ORD_DESCRIPTION" value={orderData.ORD_DESCRIPTION} onChange={handleChange} role="input" aria-required="false" 
+              tabIndex="0" aria-selected="false" id="order-description"/>
             </div>
             <div className="form-actions">
-              <button type="submit" className="btn btn-save" role="button" aria-roledescription="save button" tabIndex="0" aria-selected="false">Save</button>
-              <button type="button" className="btn btn-cancel" onClick={onClose} role="button" aria-roledescription="cancel button" tabIndex="0" aria-selected="false">Cancel</button>
+              <button type="submit" className="btn btn-save" role="button" aria-roledescription="save button" 
+              tabIndex="0" aria-selected="false">Save</button>
+              <button type="button" className="btn btn-cancel" onClick={onClose} role="button" aria-roledescription="cancel button" 
+              tabIndex="0" aria-selected="false">Cancel</button>
             </div>
           </form>
         </div>

@@ -305,15 +305,15 @@ const Table = ({userID, role} ) => {
 
     if (width > 900) {
         return (
-            <div className="tableDiv">
-                <table className="table">
-                    <caption>
+            <div className="tableDiv" >
+                <table className="table" role="table" aria-describedby="table_descr">
+                    <caption id="table_descr">
                         Developers currently enrolled in this course, column headers are sortable.
                     </caption>
 
 
                     <thead>
-                        <tr>
+                        <tr role="row">
                             {columns.map(({ id, label, accessor }) => {
 
                                 let cl = "tr"
@@ -323,6 +323,7 @@ const Table = ({userID, role} ) => {
                                         key={accessor}
                                         onClick={() => handleSorting(accessor, id)}
                                         className={cl}
+                                        role="columnheader"
                                     >
                                         {label}{orderField[id] === "asc" ? ` \u25B4` : ""}{orderField[id] === "desc" ? " \u25BE" : ""}
 
@@ -334,10 +335,10 @@ const Table = ({userID, role} ) => {
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody role="rowgroup">
                         {tableData.map((data) => {
                             return (
-                                <tr key={data.id}>
+                                <tr key={data.id} role="row">
                                     {columns.map(({ accessor }) => {
                                         const tData = data[accessor] ? data[accessor] : "——";
                                         let clickHandler = null
@@ -349,13 +350,15 @@ const Table = ({userID, role} ) => {
 
                                         return <td className={clickHandler ? 'cliccableTD' : 'defaultTD'}
                                             key={accessor + data.id}
-                                            onClick={clickHandler ? () => clickHandler(data[accessor]) : null}>
+                                            onClick={clickHandler ? () => clickHandler(data[accessor]) : null}
+                                            role="cell" tabindex="0">
                                             {tData}
                                         </td>;
                                     })}
                                     {role !== "customer" && (
                                         < td style={{ width: '115 px' }}>
-                                            <KebabMenu data={data} handleEdit={handleEdit} handleDelete={handleDelete} />
+                                            <KebabMenu data={data} handleEdit={handleEdit} handleDelete={handleDelete} 
+                                            role ="cell" tabindex="0"/>
                                         </td>
                                     )
                                     }
@@ -408,7 +411,7 @@ const Table = ({userID, role} ) => {
 
                     <label for="order-field">Sort by:</label>
                     <select id="order-field" name="order-field" onChange={handleSorting2}>
-                        <option id="-1" value="None">---</option>
+                        <option id="-1" value="None" role="option">---</option>
                         {columns.map(({ id, label, accessor }) => {
                             return (
                                 <option id={id} value={accessor}>{label}</option>
