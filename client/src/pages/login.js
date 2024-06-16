@@ -3,7 +3,7 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import '../styles/login.css';
+import './login.css';
 
 
 const apiProxy='http://localhost:4000';
@@ -72,7 +72,7 @@ const Login = () => {
         <h2>Login</h2>
         <div className="form-group">
           <label htmlFor="username">Username:</label>
-          <input placeholder="your username" role="input" aria-required="true" tabindex="0" aria-selected="true"
+          <input placeholder="Insert username" role="input" aria-required="true" tabindex="0" aria-selected="true"
             type="text"
             id="username"
             value={username}
@@ -81,7 +81,7 @@ const Login = () => {
         </div>
         <div className="form-group">
           <label htmlFor="password">Password:</label>
-          <input placeholder="your password" role="input" aria-required="true" tabindex="0" aria-selected="false"
+          <input placeholder="Insert password" role="input" aria-required="true" tabindex="0" aria-selected="false"
             type="password"
             id="password"
             value={password}
@@ -93,7 +93,7 @@ const Login = () => {
             {errorMessage}
           </div>
         )}
-        <button  type="submit" role="button" aria-roledescription="submit button" tabindex="0" aria-selected="false">Login</button>
+        <button className="login-btn" aria-label="Submit" type="submit" role="button" aria-roledescription="submit button" tabindex="0" aria-selected="false">Login</button>
       </form>
     </div>
   );

@@ -65,11 +65,26 @@ const Table = ({userID, role} ) => {
     
 
 
-    const handleSave = () => {
-        console.log("saved");
+    const handleSave = async (updatedOrder) => {
+        console.log('cliccato save');
+        console.log('ordine da cambiare è: ', updatedOrder)
+        console.log('chiave dell ordine: ', updatedOrder.ORD_NUM)
+        const ord_num = updatedOrder.ORD_NUM
+        try {
+            const response = await axios.put(`${apiProxy}/orders/${ord_num}`, updatedOrder, {
+                headers: { Authorization: `Bearer ${Cookies.get('auth_token')}`}
+            });
+            if (response.status === 200) {
+                setTableData((prevData) => prevData.map((order) => (order.ORD_NUM === updatedOrder.ORD_NUM ? updatedOrder : order)));
+                setSelectedOrder(null)
+            }
+        } catch (error) {
+            console.error('Error updating order', error)
+        }
         //TODO aggiungere/copiare dal main logica
         setEditTriggered(false);
     }
+
     const handleClose = () => {
         console.log("closing");
         //TODO aggiungere/copiare dal main logica
