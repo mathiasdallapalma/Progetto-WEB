@@ -74,8 +74,8 @@ router.get("/agents/:a_code", verifyToken, authorizeRoles("agent"), async (req, 
 })
 
 //Nuova versione GET orders - Acqua
-router.get("/:a_code", verifyToken, async (req, res) => { //ho tolto verifyToken
-  const user_code = req.params.a_code;
+router.get("/", verifyToken, async (req, res) => { //ho tolto verifyToken
+  const user_code = req.query.user;
   console.log("recupero utente con username: ", user_code);
   const user = (await db.queryUsers('SELECT * FROM "USERS" WHERE "USERNAME" = $1', [user_code])).rows[0];
   console.log("user = ", user);  
