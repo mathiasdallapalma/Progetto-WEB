@@ -11,7 +11,7 @@ router.get("/:code", async (req, res) => {
   try {
     console.log("cerco customer con codice", x)
     const result = await db.queryAgents('SELECT * FROM CUSTOMER WHERE "CUST_CODE" = $1', [x])
-    console.log(result)
+    //console.log(result)
     if (result.rowCount == 0) {
         return res.status(404).json({ message: "Customer not found :(" })
     }
