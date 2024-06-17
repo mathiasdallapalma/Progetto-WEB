@@ -302,7 +302,7 @@ const Table = ({userID, role} ) => {
     }
 
     const agentCodeHandler = (code) => {
-        console.log("agent")
+        console.log('cliccato agent', code)
         selectedAgent=code;
         setShowAgent(true);
     };

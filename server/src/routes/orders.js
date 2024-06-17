@@ -27,9 +27,19 @@ router.get("/customers/:c_code", verifyToken, authorizeRoles("customer"), async 
     const custCode = req.params.c_code;
     console.log("prendo ordini di ", custCode)
     const orders = await db.queryAgents('SELECT * FROM ORDERS WHERE "CUST_CODE" = $1', [custCode]);
+    const formattedOrders = orders.rows.map(order => {
+        // Imposta il fuso orario a zero
+        const dateWithZeroTimezone = new Date(order.ORD_DATE);
+        dateWithZeroTimezone.setMinutes(dateWithZeroTimezone.getMinutes() - dateWithZeroTimezone.getTimezoneOffset());
+        return {
+            ...order,
+            ORD_DATE: dateWithZeroTimezone.toISOString().split('T')[0]
+        }
+    })
     try {
         console.log('Orders: ', orders.rows)
-        res.status(200).json(orders.rows)
+        //res.status(200).json(orders.rows)
+        res.status(200).json(formattedOrders)
     } catch (err) {
         res.status(500).json(err)
         console.error(err)
