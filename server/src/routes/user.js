@@ -77,6 +77,7 @@ export { router as userRouter };
 };*/
 
 export const verifyToken = (req, res, next) => {
+    //console.log("verifyToken - request = ", req.body);
     const token = req.headers.authorization;
     if (token) {
         jwt.verify(token, "secret", (err, decoded) => {

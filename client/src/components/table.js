@@ -339,6 +339,7 @@ const Table = ({userID, role} ) => {
                                         onClick={() => handleSorting(accessor, id)}
                                         className={cl}
                                         role="columnheader"
+                                        tabindex="0"
                                     >
                                         {label}{orderField[id] === "asc" ? ` \u25B4` : ""}{orderField[id] === "desc" ? " \u25BE" : ""}
 
@@ -362,12 +363,13 @@ const Table = ({userID, role} ) => {
                                         } else if (accessor === "AGENT_CODE") {
                                             clickHandler = agentCodeHandler
                                         }
-
+                                        
+                                        let tmp = clickHandler ? <button class="hidden-button" tabindex="0" role="button"> {tData} </button> : tData;
                                         return <td className={clickHandler ? 'cliccableTD' : 'defaultTD'}
                                             key={accessor + data.id}
                                             onClick={clickHandler ? () => clickHandler(data[accessor]) : null}
-                                            role="cell" tabindex="0">
-                                            {tData}
+                                            role="cell">
+                                            {tmp}
                                         </td>;
                                     })}
                                     {role !== "customer" && (
@@ -425,7 +427,7 @@ const Table = ({userID, role} ) => {
                 <div className="sortcontainer">
 
                     <label for="order-field">Sort by:</label>
-                    <select id="order-field" name="order-field" onChange={handleSorting2}>
+                    <select id="order-field" name="order-field" onChange={handleSorting2} role="menu" tabindex="0">
                         <option id="-1" value="None" role="option">---</option>
                         {columns.map(({ id, label, accessor }) => {
                             return (
@@ -434,22 +436,22 @@ const Table = ({userID, role} ) => {
                         })}
                     </select>
 
-                    <div class="sort-options">  Asc - Desc
-                        <label class="switch">
-                            <input type="checkbox" onChange={handleSwitch}></input>
-                            <span class="slider round"></span>
+                    <div class="sort-options" aria-label="Acendant or Descendant based on order number">  Asc - Desc
+                        <label class="switch" role="switch">
+                            <button type="checkbox" role="switch" tabindex="0" onChange={handleSwitch}></button>
+                            <span class="slider round"  tabindex="0"></span>
                         </label>
                     </div>
 
                 </div>
 
-                <div className="tableDiv">
+                <div className="tableDiv" role="group" aria-label="Group of cards containing order informations">
 
 
                     {tableData.map((data) => {
 
                         return (
-                            <div key={data.id} className="orderCard">
+                            <div key={data.id} className="orderCard" aria-label="card of order" role="row">
                                 <div className="cardHeader">
                                     <p><b>N°: </b>{data["ORD_NUM"]}</p>
                                     {role !== "customer" && (
@@ -467,12 +469,14 @@ const Table = ({userID, role} ) => {
                                         } else if (accessor === "AGENT_CODE") {
                                             clickHandler = agentCodeHandler
                                         }
-
+                                        
+                                        let tmp = clickHandler ? <button class="hidden-button" tabindex="0" role="button"> {tData} </button> : tData;
                                         return <p style={{ cursor: clickHandler ? 'pointer' : 'default' }}
                                             key={accessor + data.id}
                                             onClick={clickHandler ? () => clickHandler(data[accessor]) : null}
-                                            className="cardItem">
-                                            <b>{label} : </b> {tData}
+                                            className="cardItem"
+                                            role="cell">
+                                            <b>{label} : </b> {tmp}
                                         </p>;
                                     }
 

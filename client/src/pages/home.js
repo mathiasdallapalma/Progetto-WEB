@@ -50,7 +50,7 @@ export const Home = () => {
     <div aria-label="Homepage" className="Home">
       <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
       <h1>HOME</h1>
-      <button className="add-button" onClick={() => handleAdd()}>
+      <button className="add-button" onClick={() => handleAdd()} role="button" aria-label="Button to add a new order" tabindex="0">
         <AddCircleIcon className="add-icon" />
         <p className="button-text">Aggiungi</p>
       </button>
