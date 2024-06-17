@@ -31,9 +31,16 @@ label {
 input {
   width: 100%;
   padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  box-sizing: border-box;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .login {
@@ -54,7 +61,7 @@ button:hover {
 
 .error-message {
   color: white;
-  background-color: #d9534f;
+  background-color: #952723;
   padding: 10px;
   margin-top: 10px;
   margin-bottom: 15px;
@@ -63,7 +70,7 @@ button:hover {
 }
 
 .login-btn {
-  background-color: #007bff;
+  background-color: #004EA2;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -82,4 +89,11 @@ button:hover {
 
 .required {
     color: red;
+}
+
+.error-icon {
+  position: absolute;
+  right: 10px;
+  color: red;
+  font-size: 1.2em; /* Adjust the size of the icon if needed */
 }

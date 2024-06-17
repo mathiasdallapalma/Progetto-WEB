@@ -3,6 +3,7 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { FaExclamationCircle } from "react-icons/fa";
 import './login.css';
 
 
@@ -21,20 +22,33 @@ const Login = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Stato per il messaggio di errore
+  const [errorMessage, setErrorMessage] = useState("");
+  const [usernameError, setUsernameError] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
 
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setUsernameError(false);
+    setPasswordError(false);
+    let hasError = false;
+
     if (!username && !password) {
         setErrorMessage("Username and Password are required");
     }
     else if (!username) {
         setErrorMessage("Username is required");
+        setUsernameError(true)
+        //hasError = true
     }
     else if (!password) {
         setErrorMessage("Password is required");
+        setPasswordError(true)
+        //hasError = true
+    }
+    if (hasError) {
+        setErrorMessage('Please fill out all required fields.')
     }
     else try {
       console.log(apiProxy + '/api/v1/auth/login')
@@ -70,6 +84,9 @@ const Login = () => {
         setErrorMessage(result.data.message);
       }
     } catch (error) {
+      setUsername("")
+      setPassword("")
+      //setErrorMessage("User not found")
       console.error(error);
     }
   };
@@ -106,7 +123,7 @@ const Login = () => {
     </div>
   );*/
 
-  return (
+  /*return (
     <div aria-label="Login page" class="auth-container">
       <form onSubmit={handleSubmit} role="form">
         <h2>Login</h2>
@@ -126,6 +143,50 @@ const Login = () => {
         <button class="login-btn" type="submit" aria-label="Login">Login</button>
       </form>
     </div>
-  )
+  )*/
+
+  return (
+      <div aria-label="Login page" className="auth-container">
+        <form onSubmit={handleSubmit} role="form" aria-describedby="error-message">
+          <h2>Login</h2>
+          <div className={`form-group ${usernameError ? 'has-error' : ''}`}>
+            <label htmlFor="username">Username <span className="required" aria-hidden="true">*</span></label>
+            <div className="input-wrapper">
+              <input
+                placeholder="Insert username"
+                aria-required="true"
+                type="text"
+                id="username"
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                aria-labelledby="username-label"
+              />
+              {usernameError && <FaExclamationCircle className="error-icon" aria-hidden="true" />}
+            </div>
+          </div>
+          <div className={`form-group ${passwordError ? 'has-error' : ''}`}>
+            <label htmlFor="password">Password <span className="required" aria-hidden="true">*</span></label>
+            <div className="input-wrapper">
+              <input
+                placeholder="Insert password"
+                aria-required="true"
+                type="password"
+                id="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                aria-labelledby="password-label"
+              />
+              {passwordError && <FaExclamationCircle className="error-icon" aria-hidden="true" />}
+            </div>
+          </div>
+          {errorMessage && (
+            <div id="error-message" className="error-message" role="alert">
+              {errorMessage}
+            </div>
+          )}
+          <button className="login-btn" type="submit" aria-label="Submit">Login</button>
+        </form>
+      </div>
+    );
 };
 
