@@ -63,6 +63,74 @@ router.get("/agents/:a_code", verifyToken, authorizeRoles("agent"), async (req, 
     }
 })
 
+//Nuova versione GET orders - Acqua
+router.get("/:a_code", verifyToken, async (req, res) => { //ho tolto verifyToken
+  const user_code = req.params.a_code;
+  console.log("recupero utente con username: ", user_code);
+  const user = (await db.queryUsers('SELECT * FROM "USERS" WHERE "USERNAME" = $1', [user_code])).rows[0];
+  console.log("user = ", user);  
+  const user_role = user.role;
+  console.log("role = ", user_role)
+  
+  switch (user_role) {
+    case "customer":
+      var where = ('SELECT * FROM "ORDERS" WHERE "CUST_CODE" = \'' + user.username + "\'");
+      break;
+    case "agent":
+      var where = ('SELECT * FROM "ORDERS" WHERE "AGENT_CODE" = \'' + user.username + "\'");
+      break;
+    case "dirigente":
+      var where = 'SELECT * FROM "ORDERS"';
+      break;
+    default:
+      console.log("Errore, ruolo non ricnosciuto [$1]",user_role);
+      res.status(500);
+      break;
+  }
+  
+  //console.log("where = ", where);
+  const orders = await db.queryAgents(where);
+
+  const formattedOrders = orders.rows.map(order => {
+    // Imposta il fuso orario a zero
+    const dateWithZeroTimezone = new Date(order.ORD_DATE);
+    dateWithZeroTimezone.setMinutes(dateWithZeroTimezone.getMinutes() - dateWithZeroTimezone.getTimezoneOffset());
+    return {
+        ...order,
+        ORD_DATE: dateWithZeroTimezone.toISOString().split('T')[0]
+    }
+  })
+
+  try {
+      //res.status(200).json(orders.rows)
+      res.status(200).json(formattedOrders)
+  } catch (err) {
+      res.status(500).json(err)
+      console.error(err)
+  }
+  /*
+  const orders = await db.queryAgents('SELECT * FROM ORDERS WHERE "$1" = $1', [user.username]);
+
+  const formattedOrders = orders.rows.map(order => {
+      // Imposta il fuso orario a zero
+      const dateWithZeroTimezone = new Date(order.ORD_DATE);
+      dateWithZeroTimezone.setMinutes(dateWithZeroTimezone.getMinutes() - dateWithZeroTimezone.getTimezoneOffset());
+      return {
+          ...order,
+          ORD_DATE: dateWithZeroTimezone.toISOString().split('T')[0]
+      }
+  })
+
+  try {
+      //res.status(200).json(orders.rows)
+      res.status(200).json(formattedOrders)
+  } catch (err) {
+      res.status(500).json(err)
+      console.error(err)
+  }
+  */
+})
+
 // PUT - modifica ordine
 // Stefano
 router.put("/:orderID", async (req, res) => {
