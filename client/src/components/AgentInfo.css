@@ -40,3 +40,20 @@ h3 {
 p {
   margin: 10px 0;
 }
+
+.close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #ff0000; /* rosso */
+}
+
+.close-button:focus {
+  outline: 2px solid #000; /* bordo di focus per l'accessibilità */
+}
+
+.error-icon {
+  margin-left: 8px;
+  color: #ff0000; /* rosso per il pericolo */
+}

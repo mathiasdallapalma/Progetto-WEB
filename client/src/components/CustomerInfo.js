@@ -40,13 +40,6 @@ const CustomerInfo = ({ code, onClose }) => {
   }
 
 
-
-
-
-
-
-
-
   return (
     <div className="popup" role="alert" aria-relevant="all" aria-label="Customer info window">
       <div className="popup-content">
