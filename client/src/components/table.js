@@ -23,7 +23,7 @@ var selectedCustomer;
 
 var toDelete;
 
-var role = "custoer" //TODO recuperare ruolo dal token/sessione
+//var role = "custoer" //TODO recuperare ruolo dal token/sessione
 
 
 var columns = [
@@ -35,16 +35,23 @@ var columns = [
     { id: 5, label: "Description", accessor: "ORD_DESCRIPTION" },
 ];
 
-if (role == "agent") {
+/*if (role == "agent") {
     columns = columns.filter((column) => column.accessor !== "AGENT_CODE");
 }
 if (role == "customer") {
     columns = columns.filter((column) => column.accessor !== "CUST_CODE");
-}
+}*/
 
 
 const Table = ({userID, role} ) => {
 
+
+    if (role == "agent") {
+        columns = columns.filter((column) => column.accessor !== "AGENT_CODE");
+    }
+    if (role == "customer") {
+        columns = columns.filter((column) => column.accessor !== "CUST_CODE");
+    }
 
     const [tableData, setTableData] = useState([]);
     const [sortField, setSortField] = useState("");
