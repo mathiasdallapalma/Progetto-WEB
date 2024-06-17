@@ -133,7 +133,7 @@ router.get("/:a_code", verifyToken, async (req, res) => { //ho tolto verifyToken
 
 // PUT - modifica ordine
 // Stefano
-router.put("/:orderID", async (req, res) => {
+router.put("/:orderID", async (req, res) => { //manca verifyToken
   const { orderID } = req.params;
   const updatedOrder = req.body;
   console.log('ordine nuovo: ', updatedOrder)
@@ -166,6 +166,21 @@ router.put("/:orderID", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
     console.error(err);
+  }
+})
+
+router.delete("/:orderID", verifyToken, async (req, res) => {
+  const { orderID } = req.params;
+  console.log("order number to DELETE = ", orderID)
+  //console.log('body = ', req.headers) se verifyToken rompe, posso prendere il token da qua, ma va "forgiato"
+  const result = await db.queryAgents('DELETE FROM orders WHERE "ORD_NUM" = \''+ orderID + "';");
+  //console.log("result = ", result);
+  if (result.rowCount === 0) {
+    console.log("order not found");
+    res.status(404).json({ message: "Order not found" });
+  } else {
+    console.log("eliminato correttamente");
+    res.status(200).json(result.rows[0]);
   }
 })
 

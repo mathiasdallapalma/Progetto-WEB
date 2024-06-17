@@ -23,7 +23,7 @@ var selectedCustomer;
 
 var toDelete;
 
-//var role = "custoer" //TODO recuperare ruolo dal token/sessione
+var role; //TODO recuperare ruolo dal token/sessione
 
 
 var columns = [
@@ -211,19 +211,17 @@ const Table = ({userID, role} ) => {
     }
 
     const handleEdit = (data) => {
-        console.log("edit")
-        console.log(data)
+        console.log("to edit = ", data)
         setEditTriggered(true);
         setSelectedOrder(data);
         // Implement your edit logic here
     };
-
+    
     const handleDelete = (data) => {
-        console.log("delete")
-        console.log(data)
+        console.log("to delete = ", data)
         setShowDeletePopup(true);
         toDelete=data.ORD_NUM;
-
+        
         // Implement your delete logic here
     };
 /*
@@ -286,9 +284,20 @@ const Table = ({userID, role} ) => {
 
    
 
-    const deleteOrder = () => {
+    const deleteOrder = async () => {
         setShowDeletePopup(false);
-        console.log("cancello"+toDelete);
+        console.log("DELETE confermato: ordine = ", toDelete);
+
+        try {
+            const response = await axios.delete(apiProxy + "/orders/" + toDelete);
+            if (response.status === 200) {
+                fetchOrders();                
+                setTableData((prevData) => prevData.map((order) => (order.ORD_NUM === toDelete ? null : order)));
+                setSelectedOrder(null)
+            }
+        } catch (error) {
+            console.error('Error updating order', error)
+        }
 
     }
 
