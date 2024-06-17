@@ -12,13 +12,15 @@ const DeletePopup = ({ onSave, onClose }) => {
 
       <div className="popup-content">
 
-        <h1 aira-label="Are you sure?">Are you SURE??!</h1>
-        <div className="form-actions" aria-role="form">
-          <button type="submit" className="btn btn-save" onClick={onSave} role="button" aria-roledescription="save button" 
-          tabindex="0" aria-label="Yes delete the record">Save</button>
-          <button type="button" className="btn btn-cancel" onClick={onClose} role="button" aria-roledescription="exit button" 
-          tabindex="0" aria-label="No, do not delete the record">Cancel</button>
-        </div>
+        <laberl for="sure"><h1>Are you SURE??!</h1></laberl>
+        <form role="form" aria-required="true" aria-label="Are you sure?" id="sure">
+          <div className="form-actions" aria-role="form">
+            <button type="submit" className="btn btn-save" onClick={onSave} role="button" aria-roledescription="save button" 
+            tabindex="0" aria-label="Yes delete the record">Save</button>
+            <button type="button" className="btn btn-cancel" onClick={onClose} role="button" aria-roledescription="exit button" 
+            tabindex="0" aria-label="No, do not delete the record">Cancel</button>
+          </div>
+        </form>
       </div>
     </div>
   );
