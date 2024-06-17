@@ -31,7 +31,7 @@
 }
 
 .table thead tr {
-  background-color: #007bff;
+  background-color: #004EA2;
   color: #ffffff;
   text-align: center;
   font-weight: bold;
@@ -53,7 +53,7 @@
 
 /* Style the table head */
 .table thead {
-    background-color: #007bff;
+    background-color: #004EA2;
     color:#eee;
     position: sticky;
     top: 0;
@@ -190,7 +190,7 @@ label{
   }
 
   .orderCard{
-    background-color: #007bff; /*colore delle card*/
+    background-color: #; /*colore delle card*/
     border-radius: 16px;
     width: fit-content;
     padding: 4px;
@@ -214,7 +214,7 @@ label{
   }
 
   .cliccableTD{
-    color:#007bff;
+    color:#004EA2;
     border: none;
     padding: 0;
     background: none;

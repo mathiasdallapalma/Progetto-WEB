@@ -9,7 +9,7 @@ const agentPool = new Pool({
     password: 'password',
     port: '5432',
     max: 20,
-    database: 'mydb',
+    database: 'postgres',
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
   })
