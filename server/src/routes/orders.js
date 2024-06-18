@@ -6,6 +6,7 @@ import db from './../db/index.js';
 const router = express.Router();
 
 //GET che ignora controlli
+/*
 router.get("/", async (req, res) => {
   console.log("API request:: /orders/")
   try {
@@ -17,6 +18,7 @@ router.get("/", async (req, res) => {
     console.error(err)
   }
 });
+*/
 
 //TODO
 //GET ordini - customer
@@ -76,6 +78,7 @@ router.get("/agents/:a_code", verifyToken, authorizeRoles("agent"), async (req, 
 //Nuova versione GET orders - Acqua
 router.get("/", verifyToken, async (req, res) => { //ho tolto verifyToken
   const user_code = req.query.user;
+
   console.log("recupero utente con username: ", user_code);
   const user = (await db.queryUsers('SELECT * FROM "USERS" WHERE "USERNAME" = $1', [user_code])).rows[0];
   console.log("user = ", user);  
@@ -84,13 +87,13 @@ router.get("/", verifyToken, async (req, res) => { //ho tolto verifyToken
   
   switch (user_role) {
     case "customer":
-      var where = ('SELECT * FROM "ORDERS" WHERE "CUST_CODE" = \'' + user.username + "\'");
+      var where = ('SELECT * FROM ORDERS WHERE "CUST_CODE" = \'' + user.username + "\'");
       break;
     case "agent":
-      var where = ('SELECT * FROM "ORDERS" WHERE "AGENT_CODE" = \'' + user.username + "\'");
+      var where = ('SELECT * FROM ORDERS WHERE "AGENT_CODE" = \'' + user.username + "\'");
       break;
     case "dirigente":
-      var where = 'SELECT * FROM "ORDERS"';
+      var where = 'SELECT * FROM ORDERS';
       break;
     default:
       console.log("Errore, ruolo non ricnosciuto [$1]",user_role);
@@ -118,6 +121,17 @@ router.get("/", verifyToken, async (req, res) => { //ho tolto verifyToken
       res.status(500).json(err)
       console.error(err)
   }
+
+
+  router.get("/?agent={cust_id}", verifyToken, async (req, res) => { //ho tolto verifyToken
+    const user_code = req.query.user;
+    console.log("chiamata nuova")
+
+  });
+
+
+
+
   /*
   const orders = await db.queryAgents('SELECT * FROM ORDERS WHERE "$1" = $1', [user.username]);
 
