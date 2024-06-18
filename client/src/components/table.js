@@ -28,12 +28,13 @@ var role=localStorage.getItem("role");
 
 
 var columns = [
-    { id: 0, label: "Number", accessor: "ORD_NUM" },
-    { id: 1, label: "Amount", accessor: "ORD_AMOUNT" },
-    { id: 2, label: "Date", accessor: "ORD_DATE" },
-    { id: 3, label: "Customer", accessor: "CUST_CODE" },
-    { id: 4, label: "Agent", accessor: "AGENT_CODE" },
-    { id: 5, label: "Description", accessor: "ORD_DESCRIPTION" },
+    { id: 0, label: "Number",       accessor: "ORD_NUM" },
+    { id: 1, label: "Amount",       accessor: "ORD_AMOUNT" },
+    { id: 2, label: "Adv. Amount",  accessor:"ADVANCE_AMOUNT"},
+    { id: 3, label: "Date",         accessor: "ORD_DATE" },
+    { id: 4, label: "Customer",     accessor: "CUST_CODE" },
+    { id: 5, label: "Agent",        accessor: "AGENT_CODE" },
+    { id: 6, label: "Description",  accessor: "ORD_DESCRIPTION" },
 ];
 
 
@@ -97,8 +98,6 @@ const Table = ({userID, role} ) => {
         setShowDeletePopup(false);
 
     }
-
-
 
     const resetOrderField = (except) => {
         for (let i = 0; i < columns.length; i++) {
