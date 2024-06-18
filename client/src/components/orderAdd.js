@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import FocusTrap from 'focus-trap-react';
 import './popup.css';
 
 const OrderAddPopup = ({ onSave, onClose }) => {
@@ -24,6 +25,7 @@ const OrderAddPopup = ({ onSave, onClose }) => {
   };
 
   return (
+   <FocusTrap focusTrapOptions={{ initialFocus: false }}>
     <div className="popup" role="alert" aria-relevant="all" aria-label="Add order window">
       <div className="popup-content">
         <h2>Add Order</h2>
@@ -134,6 +136,7 @@ const OrderAddPopup = ({ onSave, onClose }) => {
         </form>
       </div>
     </div>
+   </FocusTrap>
   );
 };
 

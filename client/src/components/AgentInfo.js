@@ -62,23 +62,23 @@ const AgentInfo = ({ code, onClose }) => {
           </button>
           <h3 id="agent-info-heading">Agent Information</h3>
           <p aria-labelledby="agent-code-label agent-code" tabIndex="0">
-            <strong id="agent-code-label">Code:</strong>
+            <strong id="agent-code-label">Code: </strong>
             <span id="agent-code">{agentInfo.AGENT_CODE}</span>
           </p>
           <p aria-labelledby="agent-name-label agent-name" tabIndex="0">
-            <strong id="agent-name-label">Name:</strong>
+            <strong id="agent-name-label">Name: </strong>
             <span id="agent-name">{agentInfo.AGENT_NAME}</span>
           </p>
           <p aria-labelledby="agent-area-label agent-area" tabIndex="0">
-            <strong id="agent-area-label">Area:</strong>
+            <strong id="agent-area-label">Area: </strong>
             <span id="agent-area">{agentInfo.WORKING_AREA}</span>
           </p>
           <p aria-labelledby="agent-commission-label agent-commission" tabIndex="0">
-            <strong id="agent-commission-label">Commission:</strong>
+            <strong id="agent-commission-label">Commission: </strong>
             <span id="agent-commission">{agentInfo.COMMISSION}</span>
           </p>
           <p aria-labelledby="agent-phone-label agent-phone" tabIndex="0">
-            <strong id="agent-phone-label">Phone:</strong>
+            <strong id="agent-phone-label">Phone: </strong>
             <span id="agent-phone">{agentInfo.PHONE_NO}</span>
           </p>
         </div>

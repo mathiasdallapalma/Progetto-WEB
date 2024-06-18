@@ -27,7 +27,7 @@ router.get("/customers/:c_code", verifyToken, authorizeRoles("customer"), async 
     //const { custCode } = req.params;
     const custCode = req.params.c_code;
     console.log("prendo ordini di ", custCode)
-    const orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "CUST_CODE" = $1', [custCode]);
+    const orders = await db.queryAgents('SELECT * FROM ORDERS WHERE "CUST_CODE" = $1', [custCode]);
     const formattedOrders = orders.rows.map(order => {
         // Imposta il fuso orario a zero
         const dateWithZeroTimezone = new Date(order.ORD_DATE);
@@ -53,7 +53,7 @@ router.get("/customers/:c_code", verifyToken, authorizeRoles("customer"), async 
 router.get("/agents/:a_code", verifyToken, authorizeRoles("agent"), async (req, res) => {
     const agentCode = req.params.a_code;
     console.log("prendo gli ordini di agente ", agentCode);
-    const orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "AGENT_CODE" = $1', [agentCode]);
+    const orders = await db.queryAgents('SELECT * FROM ORDERS WHERE "AGENT_CODE" = $1', [agentCode]);
 
     const formattedOrders = orders.rows.map(order => {
         // Imposta il fuso orario a zero
@@ -85,6 +85,7 @@ router.get("/", verifyToken, async (req, res) => {
   //console.log("decoded = ", decoded)
   const mittente = decoded.id;
   const mit_role = decoded.role;
+  console.log('il ruolo è: ', mit_role)
   let orders;
 
   if(Object.keys(req.query).length > 0){
@@ -92,7 +93,7 @@ router.get("/", verifyToken, async (req, res) => {
       const target = req.query.customer;
       console.log("target customer: ", target);
       if(target === mittente || mit_role === "dirigent"){
-        orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "CUST_CODE" = $1;', [target]);
+        orders = await db.queryAgents('SELECT * FROM ORDERS WHERE "CUST_CODE" = $1;', [target]);
       }else {
         res.status(403).json({});;
         return;
@@ -100,8 +101,8 @@ router.get("/", verifyToken, async (req, res) => {
     }else if(req.query.agent !== undefined){
       const target = req.query.agent;
       console.log("target agent: ", target);
-      if(target === mittente || mit_role === "dirigent"){
-        orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "AGENT_CODE" = $1;', [target]);
+      if(target === mittente || mit_role === "agent"){
+        orders = await db.queryAgents('SELECT * FROM ORDERS WHERE "AGENT_CODE" = $1;', [target]);
       }else {
         res.status(403).json({});;
         return;
@@ -111,7 +112,7 @@ router.get("/", verifyToken, async (req, res) => {
     //DIRIGENT ZONE
     if(mit_role === "dirigent"){
       console.log("dirigent - zone")
-      orders = await db.queryAgents('SELECT * FROM orders;');
+      orders = await db.queryAgents('SELECT * FROM ORDERS;');
     }else {
       console.log("Permessi insufficienti")
       res.status(403).json({});
@@ -199,7 +200,7 @@ router.delete("/:orderID", async (req, res) => {
   console.log("order number to DELETE = ", orderID);
 
   try {
-    const result = await db.queryAgents('DELETE FROM "ORDERS" WHERE "ORD_NUM" = $1;', [orderID]);
+    const result = await db.queryAgents('DELETE FROM ORDERS WHERE "ORD_NUM" = $1;', [orderID]);
 
     if (result.rowCount === 0) {
       console.log("order not found");
