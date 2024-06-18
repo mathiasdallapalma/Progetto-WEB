@@ -114,7 +114,7 @@ const Table = ({userID, role} ) => {
             //console.log(response)
             //const response = (await axios.get(apiProxy + '/orders/order/', {userID}, {headers: {Authorization: Cookies.get('auth_token')}})).data;
             if (role == "customer") {
-                const response = (await axios.get(`${apiProxy}/orders?customer=${userID}`,{ headers: { Authorization: Cookies.get('auth_token')}})).data;
+                const response = (await axios.get(`${apiProxy}/order?customer=${userID}`,{ headers: { Authorization: Cookies.get('auth_token')}})).data;
                 console.log(response)
                 setTableData(response)
             }
