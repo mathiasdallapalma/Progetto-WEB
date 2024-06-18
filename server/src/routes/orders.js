@@ -2,10 +2,11 @@ import express from "express";
 import mongoose from "mongoose";
 import { verifyToken, authorizeRoles } from "./user.js";
 import db from './../db/index.js';
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-//GET che ignora controlli
+/*GET che ignora controlli
 router.get("/", async (req, res) => {
   console.log("API request:: /orders/")
   try {
@@ -16,17 +17,17 @@ router.get("/", async (req, res) => {
     res.status(500).json(err);
     console.error(err)
   }
-});
+});*/
 
 //TODO
 //GET ordini - customer
-// SELECT * FROM orders WHERE orders.CUST_CODE = x;
+// SELECT * FROM "ORDERS" WHERE orders.CUST_CODE = x;
 // Stefano
 router.get("/customers/:c_code", verifyToken, authorizeRoles("customer"), async (req, res) => {
     //const { custCode } = req.params;
     const custCode = req.params.c_code;
     console.log("prendo ordini di ", custCode)
-    const orders = await db.queryAgents('SELECT * FROM ORDERS WHERE "CUST_CODE" = $1', [custCode]);
+    const orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "CUST_CODE" = $1', [custCode]);
     const formattedOrders = orders.rows.map(order => {
         // Imposta il fuso orario a zero
         const dateWithZeroTimezone = new Date(order.ORD_DATE);
@@ -47,12 +48,12 @@ router.get("/customers/:c_code", verifyToken, authorizeRoles("customer"), async 
 })
 
 //GET ordini - agents
-// SELECT * FROM orders WHERE orders.AGENT_CODE = x;
+// SELECT * FROM "ORDERS" WHERE orders.AGENT_CODE = x;
 // Stefano
 router.get("/agents/:a_code", verifyToken, authorizeRoles("agent"), async (req, res) => {
     const agentCode = req.params.a_code;
     console.log("prendo gli ordini di agente ", agentCode);
-    const orders = await db.queryAgents('SELECT * FROM ORDERS WHERE "AGENT_CODE" = $1', [agentCode]);
+    const orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "AGENT_CODE" = $1', [agentCode]);
 
     const formattedOrders = orders.rows.map(order => {
         // Imposta il fuso orario a zero
@@ -74,34 +75,57 @@ router.get("/agents/:a_code", verifyToken, authorizeRoles("agent"), async (req, 
 })
 
 //Nuova versione GET orders - Acqua
-router.get("/", verifyToken, async (req, res) => { //ho tolto verifyToken
-  const user_code = req.query.user;
-  console.log("recupero utente con username: ", user_code);
-  const user = (await db.queryUsers('SELECT * FROM "USERS" WHERE "USERNAME" = $1', [user_code])).rows[0];
-  console.log("user = ", user);  
-  const user_role = user.role;
-  console.log("role = ", user_role)
-  
-  switch (user_role) {
-    case "customer":
-      var where = ('SELECT * FROM "ORDERS" WHERE "CUST_CODE" = \'' + user.username + "\'");
-      break;
-    case "agent":
-      var where = ('SELECT * FROM "ORDERS" WHERE "AGENT_CODE" = \'' + user.username + "\'");
-      break;
-    case "dirigente":
-      var where = 'SELECT * FROM "ORDERS"';
-      break;
-    default:
-      console.log("Errore, ruolo non ricnosciuto [$1]",user_role);
-      res.status(500);
-      break;
-  }
-  
-  //console.log("where = ", where);
-  const orders = await db.queryAgents(where);
+/**
+ * La chiamata puo venire da frontend o API, ricevo un target che puo essere customer/agent e il token.
+ * Analizzo il token per verificare che un utente abbia i permessi per richiedere gli ordini del target
+ * (ovvero: Target == Mittente || Mittente = dirigent )
+ */
+router.get("/", verifyToken, async (req, res) => {
+  const decoded = jwt.verify(req.headers.authorization, 'secret');
+  //console.log("decoded = ", decoded)
+  const mittente = decoded.id;
+  const mit_role = decoded.role;
+  let orders;
 
-  const formattedOrders = orders.rows.map(order => {
+  if(Object.keys(req.query).length > 0){
+    if((req.query.customer !== undefined)){
+      const target = req.query.customer;
+      console.log("target customer: ", target);
+      if(target === mittente || mit_role === "dirigent"){
+        orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "CUST_CODE" = $1;', [target]);
+      }else {
+        res.status(403).json({});;
+        return;
+      }
+    }else if(req.query.agent !== undefined){
+      const target = req.query.agent;
+      console.log("target agent: ", target);
+      if(target === mittente || mit_role === "dirigent"){
+        orders = await db.queryAgents('SELECT * FROM "ORDERS" WHERE "AGENT_CODE" = $1;', [target]);
+      }else {
+        res.status(403).json({});;
+        return;
+      }      
+    }
+  }else {
+    //DIRIGENT ZONE
+    if(mit_role === "dirigent"){
+      console.log("dirigent - zone")
+      orders = await db.queryAgents('SELECT * FROM orders;');
+    }else {
+      console.log("Permessi insufficienti")
+      res.status(403).json({});
+      return;
+    }
+  }
+/*
+  if(orders === undefined){
+    res.status(400);
+    return;
+  }*/
+
+  try {
+    const formattedOrders = orders.rows.map(order => {
     // Imposta il fuso orario a zero
     const dateWithZeroTimezone = new Date(order.ORD_DATE);
     dateWithZeroTimezone.setMinutes(dateWithZeroTimezone.getMinutes() - dateWithZeroTimezone.getTimezoneOffset());
@@ -109,36 +133,12 @@ router.get("/", verifyToken, async (req, res) => { //ho tolto verifyToken
         ...order,
         ORD_DATE: dateWithZeroTimezone.toISOString().split('T')[0]
     }
-  })
-
-  try {
-      //res.status(200).json(orders.rows)
-      res.status(200).json(formattedOrders)
+    })
+    res.status(200).json(formattedOrders)
   } catch (err) {
       res.status(500).json(err)
       console.error(err)
   }
-  /*
-  const orders = await db.queryAgents('SELECT * FROM ORDERS WHERE "$1" = $1', [user.username]);
-
-  const formattedOrders = orders.rows.map(order => {
-      // Imposta il fuso orario a zero
-      const dateWithZeroTimezone = new Date(order.ORD_DATE);
-      dateWithZeroTimezone.setMinutes(dateWithZeroTimezone.getMinutes() - dateWithZeroTimezone.getTimezoneOffset());
-      return {
-          ...order,
-          ORD_DATE: dateWithZeroTimezone.toISOString().split('T')[0]
-      }
-  })
-
-  try {
-      //res.status(200).json(orders.rows)
-      res.status(200).json(formattedOrders)
-  } catch (err) {
-      res.status(500).json(err)
-      console.error(err)
-  }
-  */
 })
 
 // PUT - modifica ordine
@@ -159,7 +159,7 @@ router.put("/:orderID", async (req, res) => { //manca verifyToken
 
   try {
     const query = `
-      UPDATE "ORDERS"
+      UPDATE orders
       SET "ORD_AMOUNT" = $1, "ADVANCE_AMOUNT" = $2, "ORD_DATE" = $3, "CUST_CODE" = $4, "AGENT_CODE" = $5, "ORD_DESCRIPTION" = $6
       WHERE "ORD_NUM" = $7
       RETURNING *;
@@ -230,7 +230,7 @@ router.post("/", async (req, res) => {
 
     try {
         const query = `
-          INSERT INTO "ORDERS" ("ORD_NUM", "ORD_AMOUNT", "ADVANCE_AMOUNT", "ORD_DATE", "CUST_CODE", "AGENT_CODE", "ORD_DESCRIPTION")
+          INSERT INTO orders ("ORD_NUM", "ORD_AMOUNT", "ADVANCE_AMOUNT", "ORD_DATE", "CUST_CODE", "AGENT_CODE", "ORD_DESCRIPTION")
           VALUES ($1, $2, $3, $4, $5, $6, $7)
           RETURNING *;
         `;
