@@ -23,8 +23,7 @@ var selectedCustomer;
 
 var toDelete;
 
-
-var role=localStorage.getItem("role");
+var role; //TODO recuperare ruolo dal token/sessione
 
 
 var columns = [
@@ -36,10 +35,15 @@ var columns = [
     { id: 5, label: "Description", accessor: "ORD_DESCRIPTION" },
 ];
 
+/*if (role == "agent") {
+    columns = columns.filter((column) => column.accessor !== "AGENT_CODE");
+}
+if (role == "customer") {
+    columns = columns.filter((column) => column.accessor !== "CUST_CODE");
+}*/
+
 
 const Table = ({userID, role} ) => {
-
-    console.log(role)
 
 
     if (role == "agent") {
@@ -115,17 +119,12 @@ const Table = ({userID, role} ) => {
             //console.log(response)
             //const response = (await axios.get(apiProxy + '/orders/order/', {userID}, {headers: {Authorization: Cookies.get('auth_token')}})).data;
             if (role == "customer") {
-                const response = (await axios.get(`${apiProxy}/order?customer=${userID}`,{ headers: { Authorization: Cookies.get('auth_token')}})).data;
+                const response = (await axios.get(`${apiProxy}/orders/customers/${userID}`,{ headers: { Authorization: Cookies.get('auth_token')}})).data;
                 console.log(response)
                 setTableData(response)
             }
             if (role == "agent") {
-                const response = (await axios.get(`${apiProxy}/orders?agent=${userID}`, { headers: { Authorization: Cookies.get('auth_token')}})).data;
-                console.log(response)
-                setTableData(response)
-            }
-            if (role == "dirigent") {
-                const response = (await axios.get(`${apiProxy}/orders`, { headers: { Authorization: Cookies.get('auth_token')}})).data;
+                const response = (await axios.get(`${apiProxy}/orders/agents/${userID}`, { headers: { Authorization: Cookies.get('auth_token')}})).data;
                 console.log(response)
                 setTableData(response)
             }
@@ -222,8 +221,67 @@ const Table = ({userID, role} ) => {
         console.log("to delete = ", data)
         setShowDeletePopup(true);
         toDelete=data.ORD_NUM;
-
+        
+        // Implement your delete logic here
     };
+/*
+
+//TODO sposta chiamata API su popup
+    const agentCodeHandler = async (agentCode) => {
+        console.log("agent")
+        console.log(agentCode)
+        try {
+            const response = await(axios.get(`${apiProxy}/agents/${agentCode}`,{ headers: { Authorization: Cookies.get('auth_token')}}));
+            console.log("response:", response.data)
+            const data = response.data
+            const cleanedData = {
+                AGENT_CODE: data.AGENT_CODE.trim(),
+                AGENT_NAME: data.AGENT_NAME.trim(),
+                WORKING_AREA: data.WORKING_AREA.trim(),
+                COMMISSION: data.COMMISSION.trim(),
+                PHONE_NO: data.PHONE_NO.trim(),
+            }
+            setSelectedAgent(agentCode)
+            setAgentInfo(cleanedData)
+        } catch (error) {
+            console.error("Error agent info", error)
+        }
+    };
+
+
+    const custCodeHandler = async (custCode) => {
+        console.log("customer")
+        console.log(custCode)
+        try {
+            const response = await(axios.get(`${apiProxy}/customers/${custCode}`, { headers: { Authorization: Cookies.get('auth_token')}}))
+            console.log("response:", response.data)
+            const data = response.data
+            const cleanedData = {
+                CUST_CODE: data.CUST_CODE.trim(),
+                CUST_NAME: data.CUST_NAME.trim(),
+                CUST_CITY: data.CUST_CITY.trim(),
+                WORKING_AREA: data.WORKING_AREA.trim(),
+                CUST_COUNTRY: data.CUST_COUNTRY.trim(),
+                GRADE: data.GRADE.trim(),
+                OPENING_AMT: data.OPENING_AMT.trim(),
+                RECEIVE_AMT: data.RECEIVE_AMT.trim(),
+                PAYMENT_AMT: data.PAYMENT_AMT.trim(),
+                OUTSTANDING_AMT: data.OUTSTANDING_AMT.trim(),
+                PHONE_NO: data.PHONE_NO.trim(),
+            }
+            setSelectedCustomer(custCode)
+            setCustomerInfo(cleanedData)
+        } catch (error) {
+            console.error("Error customer info", error)
+        }
+    };
+
+    const handleEditClick =  (order) => {
+        setSelectedOrder(order);
+        console.log(order);
+    }
+*/
+
    
 
     const deleteOrder = async () => {
