@@ -51,10 +51,10 @@ const Login = () => {
         setErrorMessage('Please fill out all required fields.')
     }
     else try {
-      console.log(apiProxy + '/api/v1/auth/login')
+      console.log(apiProxy + '/auth/login')
 
 
-      const result = await axios.post(apiProxy + '/api/v1/auth/login', {
+      const result = await axios.post(apiProxy + '/auth/login', {
         username,
         password,
       }, {

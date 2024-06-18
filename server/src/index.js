@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.use("/api/v1/auth", userRouter);
+app.use("/auth", userRouter);
 app.use("/orders", ordersRouter);
 app.use("/customers", customerRouter);
 app.use("/agents", agentRouter);
