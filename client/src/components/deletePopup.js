@@ -17,7 +17,7 @@ const DeletePopup = ({ code, onSave, onClose }) => {
 
       <div className="popup-content">
 
-        <laberl for="sure"><h1>Are you SURE??!</h1></laberl>
+        <laberl for="sure"><h1>Please confirm</h1></laberl>
         <form role="form" aria-required="true" aria-label="Are you sure?" id="sure">
           <div className="form-actions" aria-role="form">
             <button type="submit" className="btn btn-save" onClick={handleSubmit} role="button" aria-roledescription="save button" 

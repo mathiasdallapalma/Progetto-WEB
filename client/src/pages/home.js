@@ -34,9 +34,28 @@ export const Home = () => {
 
   }
 
-  const handleSave = () => {
-    console.log("saved");
+  const handleSave = async (order) => {
+    console.log('cliccato save');
+    console.log('devo creare', order)
+    order.AGENT_CODE = user.userID;
+    console.log(order.AGENT_CODE)
+    try {
+        const response = await axios.post('http://localhost:4000/orders', order, {
+            headers: { Authorization: `Bearer ${Cookies.get('auth_token')}`}
+        });
+        if (response.status === 201) {
+            console.log('Ordine creato con successo')
+            setAddTriggered(false)
+        }
+        else {
+            console.log('Errore nella creazione dell ordine')
+        }
+    }
+    catch (error) {
+        console.error('Errore durante la richiesta', error)
+    }
     //TODO aggiungere/copiare dal main logica
+    window.location.reload();
     setAddTriggered(false);
   }
   const handleClose = () => {

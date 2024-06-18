@@ -291,8 +291,8 @@ const Table = ({userID, role} ) => {
         try {
             const response = await axios.delete(apiProxy + "/orders/" + toDelete);
             if (response.status === 200) {
-                fetchOrders();                
-                setTableData((prevData) => prevData.map((order) => (order.ORD_NUM === toDelete ? null : order)));
+                fetchOrders();
+                //setTableData((prevData) => prevData.map((order) => (order.ORD_NUM === toDelete ? null : order)));
                 setSelectedOrder(null)
             }
         } catch (error) {
