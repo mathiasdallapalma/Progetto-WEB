@@ -189,14 +189,6 @@ label{
     flex-direction: column;
   }
 
-  .orderCard{
-    background-color: #; /*colore delle card*/
-    border-radius: 16px;
-    width: fit-content;
-    padding: 4px;
-    margin:4px;
-    display: inline-block;
-  }
   .cardItem{
     background-color: #eee;
     display: inline-grid;
@@ -246,7 +238,7 @@ label{
       }
 
       .orderCard{
-        background-color: #007bff; /*colore delle card*/
+        background-color: #004EA2; /*colore delle card*/
         border-radius: 16px;
         width: fit-content;
         padding: 4px;
