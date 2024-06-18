@@ -71,11 +71,11 @@ const CustomerInfo = ({ code, onClose }) => {
               onClick={onClose}
               role="button"
               aria-label="Close customer info window"
-              tabIndex="1"
+              tabIndex="0"
             >
               <FaTimes aria-hidden="true" />
             </button>
-            <h3 id="customer-info-heading">Customer Information</h3>
+            <h2 id="customer-info-heading">Customer Information</h2>
             <p aria-labelledby="customer-code-label customer-code" tabIndex="0">
               <strong id="customer-code-label">Code: </strong>
               <span id="customer-code">{customerInfo.CUST_CODE}</span>

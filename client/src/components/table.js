@@ -304,7 +304,7 @@ const Table = ({userID, role} ) => {
                                 );
                             })}
                             {role !== "customer" && (
-                            <th className="lastCol"></th>)}
+                            <th className="lastCol">Options</th>)}
                         </tr>
                     </thead>
 
@@ -385,7 +385,7 @@ const Table = ({userID, role} ) => {
 
                     <label for="order-field">Sort by:</label>
                     <select id="order-field" name="order-field" onChange={handleSorting2} role="menu" tabindex="0">
-                        <option id="-1" value="None" role="option">---</option>
+                        <option id="-1" value="None">---</option>
                         {columns.map(({ id, label, accessor }) => {
                             return (
                                 <option id={id} value={accessor}>{label}</option>
@@ -394,8 +394,8 @@ const Table = ({userID, role} ) => {
                     </select>
 
                     <div class="sort-options" aria-label="Acendant or Descendant based on order number">  Asc - Desc
-                        <label class="switch" role="switch">
-                            <button type="checkbox" role="switch" tabindex="0" onChange={handleSwitch}></button>
+                        <label class="switch" role="switch" aria-checked="false">
+                            <button type="checkbox" role="switch" aria-label="Switch ordering" aria-checked="false" tabindex="0" onChange={handleSwitch}></button>
                             <span class="slider round"  tabindex="0"></span>
                         </label>
                     </div>

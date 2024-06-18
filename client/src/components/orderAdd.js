@@ -29,14 +29,13 @@ const OrderAddPopup = ({ onSave, onClose }) => {
     <div className="popup" role="alert" aria-relevant="all" aria-label="Add order window">
       <div className="popup-content">
         <h2>Add Order</h2>
-        <form onSubmit={handleSubmit} className="edit-form" role="form">
+        <form onSubmit={handleSubmit} className="edit-form">
           <div className="form-group">
             <label htmlFor="ord_number">Order Number</label>
             <input
               name="ORD_NUM"
               onChange={handleChange}
               id="ord_num"
-              role="input"
               tabIndex="0"
               aria-label="Textbox for order number"
               aria-required="true"
@@ -49,7 +48,6 @@ const OrderAddPopup = ({ onSave, onClose }) => {
               name="CUST_CODE"
               onChange={handleChange}
               id="c_code"
-              role="input"
               tabIndex="0"
               aria-label="Textbox for customer code"
               aria-required="true"
@@ -62,7 +60,6 @@ const OrderAddPopup = ({ onSave, onClose }) => {
               name="ORD_AMOUNT"
               onChange={handleChange}
               id="o_amount"
-              role="input"
               tabIndex="0"
               aria-label="Textbox for order amount"
               aria-required="true"
@@ -75,7 +72,6 @@ const OrderAddPopup = ({ onSave, onClose }) => {
               name="ADVANCE_AMOUNT"
               onChange={handleChange}
               id="a_amount"
-              role="input"
               tabIndex="0"
               aria-label="Textbox for advance amount"
               aria-required="true"
@@ -103,7 +99,6 @@ const OrderAddPopup = ({ onSave, onClose }) => {
               name="ORD_DESCRIPTION"
               onChange={handleChange}
               id="o_desc"
-              role="input"
               tabIndex="0"
               aria-label="Textbox for order description"
               aria-required="true"

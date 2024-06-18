@@ -67,14 +67,14 @@
   
   .btn-save {
     background-color: #4CAF50;
-    color: white;
+    color: black;
     padding: 15px 25px;
     font-size: 17px;
   }
   
   .btn-cancel {
-    background-color: #f44336;
-    color: white;
+    background-color: #F86F65;
+    color: black;
     padding: 10px 20px;
     font-size: 17px;
   }
