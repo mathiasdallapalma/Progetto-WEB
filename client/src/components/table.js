@@ -76,7 +76,7 @@ const Table = ({userID, role} ) => {
         const ord_num = updatedOrder.ORD_NUM
         try {
             const response = await axios.put(`${apiProxy}/orders/${ord_num}`, updatedOrder, {
-                headers: { Authorization: `Bearer ${Cookies.get('auth_token')}`}
+                headers: { Authorization: Cookies.get('auth_token')}
             });
             if (response.status === 200) {
                 setTableData((prevData) => prevData.map((order) => (order.ORD_NUM === updatedOrder.ORD_NUM ? updatedOrder : order)));
@@ -230,7 +230,7 @@ const Table = ({userID, role} ) => {
         console.log("DELETE confermato: ordine = ", toDelete);
 
         try {
-            const response = await axios.delete(apiProxy + "/orders/" + toDelete);
+            const response = await axios.delete(apiProxy + "/orders/" + toDelete, { headers: { Authorization: Cookies.get('auth_token')}});
             if (response.status === 200) {
                 fetchOrders();
                 //setTableData((prevData) => prevData.map((order) => (order.ORD_NUM === toDelete ? null : order)));

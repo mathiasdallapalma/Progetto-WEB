@@ -144,7 +144,7 @@ router.get("/", verifyToken, async (req, res) => {
 
 // PUT - modifica ordine
 // Stefano
-router.put("/:orderID", async (req, res) => { //manca verifyToken
+router.put("/:orderID", verifyToken, authorizeRoles("agent", "dirigent"), async (req, res) => { //manca verifyToken
   const { orderID } = req.params;
   const updatedOrder = req.body;
   console.log('ordine nuovo: ', updatedOrder)
@@ -195,7 +195,7 @@ router.put("/:orderID", async (req, res) => { //manca verifyToken
   }
 })*/
 
-router.delete("/:orderID", async (req, res) => {
+router.delete("/:orderID", verifyToken, authorizeRoles("agent"), async (req, res) => {
   const { orderID } = req.params;
   console.log("order number to DELETE = ", orderID);
 
