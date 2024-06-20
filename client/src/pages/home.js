@@ -67,15 +67,17 @@ export const Home = () => {
   return (
     <div aria-label="Homepage" className="Home">
       <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
-      <h1>HOME</h1>
+      <h1 className="home-title">HOME</h1>
+      <div className="user-info">
+        <h1 aria-label="The username you logged in as">{user.userID}</h1>
+        <h1 aria-label="The role this account has">{user.role}</h1>
+      </div>
       {user.role === "agent" && (
-        <button className="add-button" onClick={() => handleAdd()} role="button" aria-label="Button to add a new order" tabindex="0">
+        <button className="add-button" onClick={() => handleAdd()} role="button" aria-label="Button to add a new order" tabIndex="0">
           <AddCircleIcon className="add-icon" />
           <p className="button-text">Aggiungi</p>
         </button>
       )}
-      <h1 aria-label="The username you logged in as">{user.userID}</h1>
-      <h1 aria-label="The role this account has">{user.role}</h1>
       <Table userID={user.userID} role={user.role} />
       {addTriggered && (
         <div>

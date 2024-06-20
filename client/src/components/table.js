@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useGetUserID } from "../hooks/useGetUserID";
 import axios from "axios";
 import Cookies from 'js-cookie';
@@ -41,6 +41,8 @@ var columns = [
 const Table = ({userID, role} ) => {
 
     console.log(role)
+    const tableRef = useRef(null);
+    const cellRefs = useRef([]);
 
 
     if (role == "agent") {
@@ -56,8 +58,8 @@ const Table = ({userID, role} ) => {
     //const [selectedAgent, setSelectedAgent] = useState(null);
     //const [selectedCustomer, setSelectedCustomer] = useState(null)
     const [agentInfo, setAgentInfo ] = useState(null);
-    
-    
+
+
     const [selectedOrder, setSelectedOrder] = useState({});
 
     //stuff for  popup
@@ -66,7 +68,7 @@ const Table = ({userID, role} ) => {
     const [showAgent, setShowAgent] = useState(false);
     const [showDeletePopup, setShowDeletePopup] = useState(false);
 
-    
+    const captionText = `There are currently ${tableData.length} orders in the table. Column headers are sortable.`;
 
 
     const handleSave = async (updatedOrder) => {
@@ -114,7 +116,7 @@ const Table = ({userID, role} ) => {
             //console.log(response)
             //const response = (await axios.get(apiProxy + '/orders/order/', {userID}, {headers: {Authorization: Cookies.get('auth_token')}})).data;
             if (role == "customer") {
-                const response = (await axios.get(`${apiProxy}/order?customer=${userID}`,{ headers: { Authorization: Cookies.get('auth_token')}})).data;
+                const response = (await axios.get(`${apiProxy}/orders?customer=${userID}`,{ headers: { Authorization: Cookies.get('auth_token')}})).data;
                 console.log(response)
                 setTableData(response)
             }
@@ -151,16 +153,60 @@ const Table = ({userID, role} ) => {
 
         window.addEventListener('resize', handleResize);
 
+
+
         return () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
 
     useEffect(() => {
+        const handleKeyDown = (event) => {
+          const { key, target } = event;
+          const currentIndex = cellRefs.current.indexOf(target);
+
+          if (currentIndex === -1) return;
+
+          switch (key) {
+            case 'ArrowRight':
+              if (currentIndex < cellRefs.current.length - 1) {
+                cellRefs.current[currentIndex + 1].focus();
+              }
+              break;
+            case 'ArrowLeft':
+              if (currentIndex > 0) {
+                cellRefs.current[currentIndex - 1].focus();
+              }
+              break;
+            case 'ArrowDown':
+              if (currentIndex + columns.length < cellRefs.current.length) {
+                cellRefs.current[currentIndex + columns.length].focus();
+              }
+              break;
+            case 'ArrowUp':
+              if (currentIndex - columns.length >= 0) {
+                cellRefs.current[currentIndex - columns.length].focus();
+              }
+              break;
+            default:
+              break;
+          }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+          document.removeEventListener('keydown', handleKeyDown);
+        };
+      }, [columns.length]);
+
+
+    useEffect(() => {
         fetchOrders();
         resetOrderField(-1);
 
     }, [userID]);
+
+
 
     const handleSorting = (sortField, id) => {
 
@@ -216,14 +262,14 @@ const Table = ({userID, role} ) => {
         setSelectedOrder(data);
         // Implement your edit logic here
     };
-    
+
     const handleDelete = (data) => {
         console.log("to delete = ", data)
         setShowDeletePopup(true);
         toDelete=data.ORD_NUM;
 
     };
-   
+
 
     const deleteOrder = async () => {
         setShowDeletePopup(false);
@@ -254,13 +300,14 @@ const Table = ({userID, role} ) => {
 
         selectedCustomer=code;
         setShowCostumer(true)
-        
+
 
         console.log(selectedCustomer)
 
     };
 
     const handleSwitch = (event) => {
+        console.log('switch')
         const isChecked = event.target.checked;
 
         for (let i = 0; i < columns.length; i++) {
@@ -277,10 +324,10 @@ const Table = ({userID, role} ) => {
 
     if (width > 900) {
         return (
-            <div className="tableDiv" >
+            <div className="tableDiv">
                 <table className="table" role="table" aria-describedby="table_descr">
-                    <caption id="table_descr">
-                        Developers currently enrolled in this course, column headers are sortable.
+                    <caption id="table_descr" className="table-caption">
+                        {captionText}
                     </caption>
 
 
@@ -297,6 +344,7 @@ const Table = ({userID, role} ) => {
                                         className={cl}
                                         role="columnheader"
                                         tabindex="0"
+                                        id={`header-${accessor}`}
                                     >
                                         {label}{orderField[id] === "asc" ? ` \u25B4` : ""}{orderField[id] === "desc" ? " \u25BE" : ""}
 
@@ -304,34 +352,37 @@ const Table = ({userID, role} ) => {
                                 );
                             })}
                             {role !== "customer" && (
-                            <th className="lastCol">Options</th>)}
+                            <th className="lastCol" tabindex="0">Options</th>)}
                         </tr>
                     </thead>
 
                     <tbody role="rowgroup">
-                        {tableData.map((data) => {
+                        {tableData.map((data, rowIndex) => {
                             return (
                                 <tr key={data.id} role="row">
-                                    {columns.map(({ accessor }) => {
+                                    {columns.map(({ accessor }, colIndex) => {
                                         const tData = data[accessor] ? data[accessor] : "——";
+                                        const cellIndex = rowIndex * columns.length + colIndex;
                                         let clickHandler = null
                                         if (accessor === "CUST_CODE") {
                                             clickHandler = custCodeHandler
                                         } else if (accessor === "AGENT_CODE") {
                                             clickHandler = agentCodeHandler
                                         }
-                                        
+
                                         let tmp = clickHandler ? <button class="hidden-button" tabindex="0" role="button"> {tData} </button> : tData;
+                                        const cellAriaLabel = colIndex === 0 ? `Row ${rowIndex + 1}; ${accessor}: ${tData}` : `${accessor}: ${tData}`;
                                         return <td className={clickHandler ? 'cliccableTD' : 'defaultTD'}
                                             key={accessor + data.id}
                                             onClick={clickHandler ? () => clickHandler(data[accessor]) : null}
-                                            role="cell">
+                                            role="cell"  aria-label={cellAriaLabel} tabindex="0"
+                                            ref={el => cellRefs.current[cellIndex] = el}>
                                             {tmp}
                                         </td>;
                                     })}
                                     {role !== "customer" && (
                                         < td style={{ width: '115 px' }}>
-                                            <KebabMenu data={data} handleEdit={handleEdit} handleDelete={handleDelete} 
+                                            <KebabMenu data={data} handleEdit={handleEdit} handleDelete={handleDelete}
                                             role ="cell" tabindex="0"/>
                                         </td>
                                     )
@@ -340,7 +391,6 @@ const Table = ({userID, role} ) => {
                             );
                         })}
                     </tbody>
-
                 </table>
                 {
                     editTriggered && (
@@ -358,7 +408,7 @@ const Table = ({userID, role} ) => {
                 }
                 {
                     showAgent && (
-                        
+
                         <div>
                             <AgentInfo code={selectedAgent} onClose={handleClose} />
                         </div>
@@ -395,7 +445,7 @@ const Table = ({userID, role} ) => {
 
                     <div class="sort-options" aria-label="Acendant or Descendant based on order number">  Asc - Desc
                         <label class="switch" role="switch" aria-checked="false">
-                            <button type="checkbox" role="switch" aria-label="Switch ordering" aria-checked="false" tabindex="0" onChange={handleSwitch}></button>
+                            <input type="checkbox" role="switch" aria-label="Switch ordering" aria-checked="false" tabindex="0" onChange={handleSwitch}></input>
                             <span class="slider round"  tabindex="0"></span>
                         </label>
                     </div>
@@ -420,19 +470,20 @@ const Table = ({userID, role} ) => {
 
                                     if (index != 0) {
                                         const tData = data[accessor] ? data[accessor] : "——";
+
                                         let clickHandler = null
                                         if (accessor === "CUST_CODE") {
                                             clickHandler = custCodeHandler
                                         } else if (accessor === "AGENT_CODE") {
                                             clickHandler = agentCodeHandler
                                         }
-                                        
+
                                         let tmp = clickHandler ? <button class="hidden-button" tabindex="0" role="button"> {tData} </button> : tData;
                                         return <p style={{ cursor: clickHandler ? 'pointer' : 'default' }}
                                             key={accessor + data.id}
                                             onClick={clickHandler ? () => clickHandler(data[accessor]) : null}
                                             className="cardItem"
-                                            role="cell">
+                                            role="cell" tabindex="0">
                                             <b>{label} : </b> {tmp}
                                         </p>;
                                     }
